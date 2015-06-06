@@ -27,11 +27,22 @@
       -
       - [1]: https://developer.chrome.com/extensions/contentSecurityPolicy
      -->
+    <script src="/public/javascripts/snp.js"></script>
     <script src="/public/javascripts/popup.js"></script>
   </head>
   <body>
-    <div id="status"></div>
-    <img id="image-result" hidden>
+    <!--<img src="/public/images/icon4.png" alt="Logo" style="width:32px;height:32px;">-->
+    <div id="header" align="center"></div>
+    <div id="public"></div>
+    <br>
+    <input id="add-text" placeholder='Enter a public key...' />
+    <button name="Add" id="add-button">Add</button>
+    <br>
+    <ul id="list-public"></ul>
+    <br>
   </body>
+  <footer align="center">
+    SNP &copy; Copyright 2015
+  </footer>
 </html>
 

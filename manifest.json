@@ -6,7 +6,7 @@
   "version": "1.0",
 
   "browser_action": {
-    "default_icon": "/public/images/icon.png",
+    "default_icon": "/public/images/icon4.png",
     "default_title": "Customize settings for SNP",
     "default_popup": "/views/popup.html"
   },
