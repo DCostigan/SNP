@@ -12,8 +12,8 @@ div {
 }
 
 #wrapper {
-    margin: 0px 0px;
-    width: 275px;
+    /*margin: 0px 0px;
+    width: 275px; */
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 13px;
     max-height: 600px;
@@ -21,10 +21,16 @@ div {
 
 body {
     font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
-    font-size: 100%;
+    font-size: 75%;
 }
 
 .menu-entry {
     padding: 3px 4px 3px 8px;
     cursor: pointer;
+}
+
+.separator {
+    width: 100%;
+    border-top: 2px groove white;
+    margin: 5px -5px 5px -3px;
 }

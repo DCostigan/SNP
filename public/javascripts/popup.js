@@ -195,31 +195,32 @@
 //      renderStatus('Cannot display settings. ' + errorMessage);
 //});
 
-//function openSettings (){
-//    chrome.tabs.create({ url: "http://localhost:3000" });
-//}
+function openSettings (){
+    chrome.tabs.create({ url: "http://localhost:3000" });
+}
 
-//function renderHeader(){
-//    var header = document.getElementById('header');
-//    var logo = document.createElement('img');
-//    //logo.src = 'public/images/icon4.png';
-//    logo.setAttribute("src", "/public/images/icon4.png");
-//    logo.setAttribute("height", "64");
-//    logo.setAttribute("width", "64");
-//    logo.setAttribute("alt", "Logo");
-//    var h2 = document.createElement('h2');
-//    var text = document.createTextNode('Social Network Privacy');
-//    h2.appendChild(text);
-//    header.appendChild(logo);
-//    header.appendChild(h2);
-//}
+function setPause (){
+    console.log("Pressed Pause\n");
+}
+
+function renderHeader(){
+    var header = document.getElementById('header');
+    var logo = document.createElement('img');
+    //logo.src = 'public/images/icon4.png';
+    logo.setAttribute("src", "/public/images/icon4.png");
+    logo.setAttribute("height", "64");
+    logo.setAttribute("width", "64");
+    logo.setAttribute("alt", "Logo");
+    var h2 = document.createElement('h2');
+    var text = document.createTextNode('Social Network Privacy');
+    h2.appendChild(text);
+    header.appendChild(logo);
+    header.appendChild(h2);
+}
 
 
 document.addEventListener('DOMContentLoaded', function() {
-    chrome.tabs.create({ url: "http://localhost:3000" });
     //renderHeader();
+    openSettings();
 });
 
-//document.addEventListener('Settings', 'click', function() {
-//    openSettings();
-//});
