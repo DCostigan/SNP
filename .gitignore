@@ -1,2 +1,5 @@
 /node_modules
 /.idea
+
+jquery-1.11.3.min.js
+jquery-2.1.4.min.js

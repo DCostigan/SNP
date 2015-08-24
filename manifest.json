@@ -10,6 +10,13 @@
     "default_title": "Customize settings for SNP",
     "default_popup": "/views/popup.html"
   },
+
+  "content_scripts": [ {
+    "js": [ "/jquery-1.11.3.min.js", "/public/javascripts/popup.js" ],
+    "matches": [ "*://*/*" ],
+    "run_at" : "document_start"
+  }],
+
   "permissions": [
     "activeTab",
     "https://ajax.googleapis.com/"
