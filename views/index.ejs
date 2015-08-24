@@ -2,34 +2,33 @@
 <html>
 <head>
   <title>Social Network Privacy</title>
-  <link rel='stylesheet' href='public/stylesheets/style.css' />
-  <img src="/images/icon4.png" alt="Logo">
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+  <img src="/images/icon4.png" alt="Logo" align="center" class="logo">
   <script type="text/javascript"
-          src="jquery-2.1.4.min.js">
+          src="/javascripts/jquery-2.1.4.min.js">
   </script>
   <script type="text/javascript"
           src="/javascripts/snp.js">
   </script>
 </head>
 <body>
-<div id = "credentials">
+<div id = "credentials" align="center">
 
-  <p>Welcome to Social Network Privacy!</p>
+  <h1>Please Login</h1>
 
-  <input id="user-name" type="text" name="user-name"><br>
-  <input id="password" type="text" name="password"><br>
-  <button name="login" id= "login" class="login">Login</button>
+  <input id="user-name" type="text" name="user-name" placeholder='Username' align="center"><br>
+  <input id="password" type="password" name="password" placeholder='Password' align="center"><br>
+  <button name="login" id= "login" class="login" align="center">Login</button>
   <br>
 </div>
-<div id = "save-credentials">
-  <input id ="save" type="checkbox" name="save">
+<div id = "create-user" align="center">
+  <a href="users">Create User</a>
+  <br>
 </div>
-<div id = "create-user">
-  <a href="TBA">Create User</a>
+<div id = "save-credentials" align="center">
+  <input id ="save" type="checkbox" name="save" align="center" checked >Keep Me Logged In
 </div>
-
 </body>
-<br>
 <footer align="center">
   SNP &copy; Copyright 2015
 </footer>

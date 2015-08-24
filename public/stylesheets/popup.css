@@ -1,0 +1,30 @@
+#titletext{
+    padding: 8px 8px 2px 0px;
+    padding-top: 8px;
+    padding-right: 8px;
+    padding-bottom: 2px;
+    padding-left: 0px;
+    text-align: center;
+}
+
+div {
+    display: block;
+}
+
+#wrapper {
+    margin: 0px 0px;
+    width: 275px;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    max-height: 600px;
+}
+
+body {
+    font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
+    font-size: 100%;
+}
+
+.menu-entry {
+    padding: 3px 4px 3px 8px;
+    cursor: pointer;
+}
