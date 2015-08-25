@@ -185,9 +185,9 @@
 //    //    renderButton();
 //    //});
 //    renderButton();
-//    //loadScript("/public/javascripts/snp.js", populateList);
+//    //loadScript("/public/javascripts/snp-index.js", populateList);
 //    renderList();
-//    //loadScript("/public/javascripts/snp.js", buttonCreation);
+//    //loadScript("/public/javascripts/snp-index.js", buttonCreation);
 //
 //
 //

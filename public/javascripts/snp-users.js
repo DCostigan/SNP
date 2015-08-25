@@ -38,15 +38,15 @@ UserClient.prototype = {
         });
     },
 
-    check : function (keyPair) {
+    check : function (uname, password) {
         var that = this;
         $.ajax({
             type        : 'POST',
             url         : '/checkuser',
-            data        : {last : that.keyPairs.length },
+            data        : {last : that.users.length },
             dataType    : 'json'
         }).done(function (data) {
-            console.log('Check the rcvd key pairs: ' + JSON.stringify(data));
+            console.log('Check the rcvd username: ' + JSON.stringify(data));
 
             //that.keyPairs = that.keyPairs.concat(data);
             //
@@ -57,3 +57,4 @@ UserClient.prototype = {
         });
     }
 };
+
