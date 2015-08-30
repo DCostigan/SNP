@@ -1,11 +1,6 @@
 var express = require('express');
 var router = express.Router();
 
-var users = [];
-
-//Temporarily add user to be checked against
-users.push(new User('admin', 'password'));
-
 function User(name, pass) {
   this.name = name;
   this.pass = pass;
@@ -17,13 +12,19 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/checkuser', function(req, res, next) {
-  console.log('Checking User in Database!\n');
-  //CLEAR CACHED users[]
+  console.log('Checking for User in Database!\n');
+  var name = req.body.uname;
+  var pass = req.body.password;
+  console.log(name + ' ' + pass + "\n");
+
+  //CLEAR CACHED users[]  --OR--  KEEP SMALL USERS CACHE
   //CALL DATABASE FINDUSER
-  //IF USER IS IN users[]
-  var last = parseInt(req.body.last, 10);
-  var rest = users.slice(last, users.length);
-  res.json(rest);
+  var foundUser = 1;
+  //IF USER IS IN DB PUSH TO CACHE ARRAY
+  var response = ({status: 'INVALID'})
+  if(foundUser)
+    response = ({status: 'OK'});
+  res.json(response);
 });
 
 module.exports = router;

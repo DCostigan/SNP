@@ -25,44 +25,22 @@ function UserClient(config){
 }
 
 UserClient.prototype = {
-    users : [],
-
-    post : function (uname, password){
-        $.ajax({
-            type        : 'POST',
-            url         : '/postuser',
-            data        : {'uname' : uname, 'password' : password},
-            dataType    : 'json'
-        }).done(function (data) {
-            console.log('Post status: ' + data.status);
-        });
-    },
 
     check : function (uname, password) {
         var that = this;
         $.ajax({
             type        : 'POST',
             url         : '/checkuser',
-            data        : {last : that.users.length },
+            data        : {'uname' : uname, 'password' : password},
             dataType    : 'json'
         }).done(function (data) {
-            console.log('Check the rcvd username: ' + JSON.stringify(data));
-
-            var validityFlag = false;
-
-            that.users = that.users.concat(data);
-
-            for(var i=0;i<that.users.length;i++){
-                if(uname === (that.users[i].name) && password === (that.users[i].pass)) {
-                    validityFlag = true;
-                    console.log("Valid Usersname/Password\n");
-                }
-                else{
-                    console.log(uname + " " + that.users[i].name + "\n");
-                }
+            console.log('Valid User: ' + data.status);
+            if(data.status === 'OK') {
+                window.location.assign("http://localhost:3000/TBA");
             }
-            if(!validityFlag)
-                console.log("Invalid Username/Password\n");
+            else{
+                alert("Invalid Username and/or Password");
+            }
         });
     }
 };
