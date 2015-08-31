@@ -16,7 +16,7 @@ PostButton.prototype = {
     }
 };
 
-function UserClient(config){
+function IndexClient(config){
     for(var prop in config) {
         if(config.hasOwnProperty(prop)){
             this[prop] = config[prop];
@@ -24,7 +24,7 @@ function UserClient(config){
     }
 }
 
-UserClient.prototype = {
+IndexClient.prototype = {
 
     check : function (uname, password) {
         var that = this;
@@ -36,7 +36,7 @@ UserClient.prototype = {
         }).done(function (data) {
             console.log('Valid User: ' + data.status);
             if(data.status === 'OK') {
-                window.location.assign("http://localhost:3000/TBA");
+                window.location.assign("http://localhost:3000/home");
             }
             else{
                 alert("Invalid Username and/or Password");
@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var password = $('#password');
     var login = $('#login');
 
-    var userc = new UserClient({
+    var indexc = new IndexClient({
         view : username,
         view2:  password
     });
@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', function () {
         //$('#event-name').prop('readonly', true);
         var text2 = this.input2.val();
         var injectionProofPassword = text2.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-        userc.check(injectionProofUsername, injectionProofPassword);
+        indexc.check(injectionProofUsername, injectionProofPassword);
         return false;
     });
 });

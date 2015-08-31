@@ -25,58 +25,53 @@ function UserClient(config){
 }
 
 UserClient.prototype = {
-    users : [],
 
     post : function (uname, password){
         $.ajax({
             type        : 'POST',
-            url         : '/postuser',
+            url         : '/users/postuser',
             data        : {'uname' : uname, 'password' : password},
             dataType    : 'json'
         }).done(function (data) {
             console.log('Post status: ' + data.status);
-        });
-    },
-
-    check : function (uname, password) {
-        var that = this;
-        $.ajax({
-            type        : 'POST',
-            url         : '/checkuser',
-            data        : {last : that.users.length },
-            dataType    : 'json'
-        }).done(function (data) {
-            console.log('Check the rcvd username: ' + JSON.stringify(data));
+            window.location.assign("http://localhost:3000/home");
         });
     }
 };
 
-
 document.addEventListener('DOMContentLoaded', function () {
     console.log("Entered DOMContentLoaded\n");
     var username = $('#user-name');
-    var password = $('#password');
-    var login = $('#login');
+    var newPassword = $('#new-password');
+    var confPassword = $('#confirm-password');
+    var create = $('#create');
 
     var userc = new UserClient({
         view : username,
-        view2:  password
+        view2:  newPassword,
+        view3:  confPassword
     });
 
-    var loginButton = new PostButton({
-        view    : login,
+    var createButton = new PostButton({
+        view    : create,
         input   : username,
-        input2  : password
+        input2  : newPassword,
+        input3  : confPassword
     });
 
-    loginButton.createListener('click', function(event){
+    createButton.createListener('click', function(event){
         console.log(this);
         var text = this.input.val();
         var injectionProofUsername = text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-        //$('#event-name').prop('readonly', true);
         var text2 = this.input2.val();
+        var text3 = this.input3.val();
+
+        if(text2 !== text3){
+            alert("Passwords do not match!\n");
+            return false;
+        }
         var injectionProofPassword = text2.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-        userc.check(injectionProofUsername, injectionProofPassword);
+        userc.post(injectionProofUsername, injectionProofPassword);
         return false;
     });
 });
