@@ -1,37 +1,105 @@
 <!DOCTYPE html>
-<html>
-<head>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Social Network Privacy</title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-    <img src="/images/icon4.png" alt="Logo" align="center" class="logo">
-    <script type="text/javascript"
-            src="/javascripts/jquery-2.1.4.min.js">
-    </script>
-    <script type="text/javascript"
-            src="/javascripts/snp-home.js">
-    </script>
-</head>
+    <!-- Bootstrap -->
+	<!-- <link href="css/bootstrap.css" rel="stylesheet"> -->
+      <link href="/stylesheets/bootstrap-3.3.4.css" rel="stylesheet" type="text/css">
+      <link href="/stylesheets/home.css" rel="stylesheet">
+	<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+	<!--[if lt IE 9]>
+		  <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+		  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+		<![endif]-->
+      <script type="text/javascript"
+              src="/javascripts/snp-home.js">
+      </script>
+  </head>
 <body>
-<div id = "intro-field" align="center">
+  	<div class="container">
+      <nav class="navbar navbar-default">
+        <div class="container-fluid">
+          <!-- Brand and toggle get grouped for better mobile display -->
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#defaultNavbar1"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button>
+            <a class="navbar-brand" href="localhost:3000">Social Network Privacy</a></div>
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="defaultNavbar1">
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="#">Settings</a></li>
+              <li><a href="#">About Us</a></li>
+            </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container-fluid -->
+      </nav>
+   	  <div class="icon" align="center">
+      <img src="/images/icon4.png" alt="Placeholder image" 			width="225" height="205" class="img-responsive">
+      </div>
+      <div class="credentials">
+        <form class="form-signin">
+        <h2 class="form-signin-heading">Welcome to SNP</h2>
+        <label for="inputEmail" class="sr-only">Email address</label>
+        <input type="text" id="user-name" class="form-control" placeholder="Email address" required autofocus>
+        <button class="btn btn-lg btn-primary btn-block" id="add-user" type="submit">Add User</button>
+      </form>
+      </div>
+      <div class="user-information">
+<div class="row">
+          <div class="col-xs-6">
+          <form class="form-column">
+        	<h2 class="form-column-heading">Friends</h2>
+        	<ul id="friends-list">
+            	<li>
+            		<label><input type="text" value="longnameforafriend@yahoo.com" class="form-control" readonly></label>
+                	<input type="image" class="trash-button" src="/images/trash.jpg" alt="Remove">
+            	</li>
+            	<li>
+            		<label><input type="text" value="redsoxfan4ever11@aim.com" class="form-control" readonly></label>
+            		<input type="image" class="trash-button" src="/images/trash.jpg" alt="Remove">
+            	</li>
+            </ul>
+      	  </form>
+          </div>
+          <div class="col-xs-6">
+          <form class="form-column">
+        	<h2 class="form-column-heading">Invitations</h2>
+        	<ul id="invitation-list">
+            	<li>
+            		<label><input type="text" value="longnameforaninvitation@yahoo.com" class="form-control" readonly></label>
+                	<input type="image" class="delete-button" src="/images/delete.png" alt="Delete">
+                    <input type="image" class="accept-button" src="/images/accept.png" alt="Accept">
+            	</li>
+            	<li>
+            		<label><input type="text" value="costigan.derek@gmail.com" class="form-control" readonly></label>
+            		<input type="image" class="delete-button" src="/images/delete.png" alt="Delete">
+                    <input type="image" class="accept-button" src="/images/accept.png" alt="Accept">
+            	</li>
+                <li>
+            		<label><input type="text" value="dcostiga@umass.edu" class="form-control" readonly></label>
+            		<input type="image" class="delete-button" src="/images/delete.png" alt="Delete">
+            	</li>
+            </ul>
+      	  </form>
+          </div>
+        </div>
+</div>
+    </div>
+    
+    
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) --> 
+<script src="/javascripts/jquery-1.11.2.min.js"></script>
 
-    <h1>Hello,</h1>
-    <div id = "user-name" align="center"></div>
-    <br>
-</div>
-<div id = "add-field" align="center">
-    <input id="add-user" type="text" name="add-user" placeholder='Add User' align="center">
-    <br>
-</div>
-<div id = "manage-field" align="center">
-    <div id = "accepted-users" type="text" name="accepted-users" align="left">
-        <ul style="list-style: none" id="users">Test Username!</ul>
-    </div>
-    <div id = "invitations" type="text" name="invitations" align="right">
-        <ul style="list-style: none" id="invites">Test Invite!</ul>
-    </div>
-</div>
+	<!-- Include all compiled plugins (below), or include individual files as needed --> 
+	<!-- <script src="js/bootstrap.js"></script> -->
+<script src="/javascripts/bootstrap-3.3.4.js" type="text/javascript"></script>
 </body>
 <footer align="center">
-    SNP &copy; Copyright 2015
+  SNP &copy; Copyright 2015
 </footer>
 </html>

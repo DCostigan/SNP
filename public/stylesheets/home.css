@@ -1,0 +1,92 @@
+body {
+  padding-top: 40px;
+  padding-bottom: 40px;
+  background-color: #eee;
+}
+	
+.form-signin {
+  max-width: 330px;
+  padding: 15px;
+  margin: 0 auto;
+}
+
+.col-xs-6{
+	margin-bottom: 10px;
+}
+
+.form-column {
+  max-width: 340px;
+  padding: 15px;
+  margin: 0 auto;
+}
+
+.trash-button {
+	position: relative;
+	top: 13px;
+}
+
+.accept-button {
+	position: relative;
+	top: 2px;
+}
+
+.delete-button {
+	position: relative;
+	top: 15px;
+}
+
+
+ul {
+	padding: 0;
+	margin: 0 auto;
+	display: table;
+	list-style: none;
+	overflow: scroll;
+}
+
+li {
+	list-style: none;
+	display: table-row;
+}
+
+.remove-button {
+	margin-left: 0px;
+}
+
+.form-signin .form-signin-heading,
+.form-signin, .form-control, .form-column{
+  margin-bottom: 10px;
+}
+.form-signin .form-column {
+  font-weight: normal;
+}
+.form-signin .form-control .form-column {
+  position: relative;
+  height: auto;
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+  padding: 10px;
+  font-size: 16px;
+}
+.form-signin .form-control:focus {
+  z-index: 2;
+}
+.form-signin input[type="email"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.form-signin input[type="password"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.form-column input[readonly] {
+	margin-bottom: -20px;
+  	border-bottom-right-radius: 0;
+  	border-bottom-left-radius: 0;
+	width: 225px;
+	overflow: scroll;
+}

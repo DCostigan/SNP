@@ -11,4 +11,20 @@ router.get('/', function(req, res, next) {
     res.render('home', { title: 'Express' });
 });
 
+router.post('/checkuser', function(req, res, next) {
+    console.log('Checking for User in Database!\n');
+    var name = req.body.uname;
+    var pass = req.body.password;
+    console.log(name + ' ' + pass + "\n");
+
+    //CLEAR CACHED users[]  --OR--  KEEP SMALL USERS CACHE
+    //CALL DATABASE FINDUSER
+    var foundUser = 1;
+    //IF USER IS IN DB PUSH TO CACHE ARRAY
+    var response = ({status: 'INVALID'})
+    if(foundUser)
+        response = ({status: 'OK'});
+    res.json(response);
+});
+
 module.exports = router;
