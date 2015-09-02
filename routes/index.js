@@ -19,7 +19,7 @@ router.post('/checkuser', function(req, res, next) {
 
   //CLEAR CACHED users[]  --OR--  KEEP SMALL USERS CACHE
   //CALL DATABASE FINDUSER
-  var foundUser = 1;
+  var foundUser = 0;
   //IF USER IS IN DB PUSH TO CACHE ARRAY
   var response = ({status: 'INVALID'})
   if(foundUser)
