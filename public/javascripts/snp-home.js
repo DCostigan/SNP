@@ -26,6 +26,102 @@ function HomeClient(config){
 
 HomeClient.prototype = {
 
+    friends : [],
+    invitations : [],
+
+    poll : function (uname, friendsList, invitationList) {
+        var that = this;
+        $.ajax({
+            type: 'POST',
+            url: '/home/postupdates',
+            data: { 'uname' : uname, lastFriend: that.friends.length, lastInvitation: that.invitations.length},
+            dataType: 'json'
+        }).done(function (data) {
+            console.log('Check rcvd friends & invitations: ' + JSON.stringify(data));
+
+            var fullJSONarray = data;
+            for(var i =0; i< fullJSONarray.length;i++){
+                if(fullJSONarray[i].fname !== undefined)
+                    that.friends = that.friends.concat(fullJSONarray[i]);
+                else if(fullJSONarray[i].iname !== undefined)
+                    that.invitations = that.invitations.concat(fullJSONarray[i]);
+                else
+                    console.log("Could not place fullJSONarray: " + i + "\n");
+            }
+
+            that.view2.empty();
+            that.view3.empty();
+
+
+            for(var i=0;i<that.friends.length;i++){
+                var li = document.createElement("li");
+                var label = document.createElement("label");
+                var input = document.createElement("input");
+                var button = document.createElement("input");
+                button.setAttribute('type', 'image');
+                button.setAttribute('class', 'trash-button');
+                button.setAttribute('src', '/images/trash.jpg');
+                button.setAttribute('alt', 'Remove');
+                input.setAttribute('type', 'text');
+                input.setAttribute('value', that.friends[i].fname);
+                input.setAttribute('class', 'form-control');
+                input.readOnly = true;
+                label.appendChild(input);
+                li.appendChild(label);
+                li.appendChild(button);
+                that.view2.append(li);
+            }
+
+            for(var i=0;i<that.invitations.length;i++){
+                if(that.invitations[i].type === "sent"){
+                    var li = document.createElement("li");
+                    var label = document.createElement("label");
+                    var input = document.createElement("input");
+                    var button = document.createElement("input");
+                    button.setAttribute('type', 'image');
+                    button.setAttribute('class', 'delete-button');
+                    button.setAttribute('src', '/images/delete.png');
+                    button.setAttribute('alt', 'Delete');
+                    input.setAttribute('type', 'text');
+                    input.setAttribute('value', that.invitations[i].iname);
+                    input.setAttribute('class', 'form-control');
+                    input.readOnly = true;
+                    label.appendChild(input);
+                    li.appendChild(label);
+                    li.appendChild(button);
+                    that.view3.append(li);
+                }
+                else if(that.invitations[i].type === "received"){
+                    var li = document.createElement("li");
+                    var label = document.createElement("label");
+                    var input = document.createElement("input");
+                    var deleteButton = document.createElement("input");
+                    var acceptButton = document.createElement("input");
+                    deleteButton.setAttribute('type', 'image');
+                    deleteButton.setAttribute('class', 'delete-button');
+                    deleteButton.setAttribute('src', '/images/delete.png');
+                    deleteButton.setAttribute('alt', 'Delete');
+                    acceptButton.setAttribute('type', 'image');
+                    acceptButton.setAttribute('class', 'accept-button');
+                    acceptButton.setAttribute('src', '/images/accept.png');
+                    acceptButton.setAttribute('alt', 'Accept');
+                    input.setAttribute('type', 'text');
+                    input.setAttribute('value', that.invitations[i].iname);
+                    input.setAttribute('class', 'form-control');
+                    input.readOnly = true;
+                    label.appendChild(input);
+                    li.appendChild(label);
+                    li.appendChild(deleteButton);
+                    li.appendChild(acceptButton);
+                    that.view3.append(li);
+                }
+                else{
+                    console.log("ERROR: Unrecognized type for invitation\n");
+                }
+            }
+        });
+    },
+
     check : function (uname) {
         var that = this;
         $.ajax({
@@ -36,9 +132,10 @@ HomeClient.prototype = {
         }).done(function (data) {
             console.log('Valid User: ' + data.status);
             if (data.status === 'OK') {
-                var li = $('<li>');
-                li.html("<label><input type=&#34;text&#34; value=&#34;uname&#34; class=&#34;form-control&#34; readonly></label><input type=&#34;image&#34; class=&#34;delete-button&#34; src=&#34;/images/delete.png&#34; alt=&#34;Delete&#34;>");
-                that.view.append(li);
+                //COMMENTED BECAUSE THE PAGE REFRESHES SO THIS MANIPULATION WILL NOT SHOW
+                //var li = $('<li>');
+                //li.html("<label><input type=&#34;text&#34; value=&#34;uname&#34; class=&#34;form-control&#34; readonly></label><input type=&#34;image&#34; class=&#34;delete-button&#34; src=&#34;/images/delete.png&#34; alt=&#34;Delete&#34;>");
+                //that.view.append(li);
             }
             else {
                 alert("Invalid Username and/or Password");
@@ -82,6 +179,8 @@ document.addEventListener('DOMContentLoaded', function () {
         view    : addUser,
         input   : username
     });
+
+    homec.poll("dcostigan@umass.edu", friendsList, invitationList);
 
     $("ul").on("click", "input.trash-button", function(e){
         e.preventDefault();
