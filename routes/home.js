@@ -64,15 +64,53 @@ router.post('/checkuser', function(req, res, next) {
 router.post('/removefriend', function(req, res, next) {
     console.log('Removing Friend from list!\n');
     var name = req.body.uname;
-    console.log(name + "\n");
+    var fname = req.body.fname;
+    console.log(name + " " + fname + "\n");
 
-    //CLEAR CACHED users[]  --OR--  KEEP SMALL USERS CACHE
-    //CALL DATABASE FINDUSER
-    var foundUser = 1;
+    //GET FRIENDS FOR NAME
+    //REMOVE FRIEND W/ FNAME FROM LIST
+
+    var removedFriend = 1;
     //IF USER IS IN DB PUSH TO CACHE ARRAY
     //REMOVE ASSOCIATION W/ CURRENT USER
     var response = ({status: 'FAILED'})
-    if(foundUser)
+    if(removedFriend)
+        response = ({status: 'OK'});
+    res.json(response);
+});
+
+router.post('/addfriend', function(req, res, next) {
+    console.log('Adding Friend to list!\n');
+    var name = req.body.uname;
+    var iname = req.body.iname;
+    console.log(name + " " + iname + "\n");
+
+    //GET FRIENDS FOR NAME
+    //REMOVE FRIEND W/ FNAME FROM LIST
+
+    var addedFriend = 1;
+    //IF USER IS IN DB PUSH TO CACHE ARRAY
+    //REMOVE ASSOCIATION W/ CURRENT USER
+    var response = ({status: 'FAILED'})
+    if(addedFriend)
+        response = ({status: 'OK'});
+    res.json(response);
+});
+
+router.post('/deleteinvite', function(req, res, next) {
+    console.log('Removing Invite from list!\n');
+    var name = req.body.uname;
+    var iname = req.body.iname;
+    console.log(name + " " + iname + "\n");
+
+    //GET FRIENDS FOR NAME
+    //REMOVE FRIEND W/ FNAME FROM LIST
+
+    var removedInvite = 1;
+    //IF USER IS IN DB PUSH TO CACHE ARRAY
+    //REMOVE ASSOCIATION W/ CURRENT USER
+    var response = ({status: 'FAILED'})
+    if(removedInvite)
         response = ({status: 'OK'});
     res.json(response);
 });

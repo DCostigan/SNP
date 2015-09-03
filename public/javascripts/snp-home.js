@@ -143,22 +143,58 @@ HomeClient.prototype = {
         });
     },
 
-        remove : function (uname) {
+        remove : function (uname, fname) {
             var that = this;
             $.ajax({
                 type        : 'POST',
                 url         : '/home/removefriend',
-                data        : {'uname' : uname},
+                data        : {'uname' : uname, 'fname' : fname},
                 dataType    : 'json'
             }).done(function (data) {
-                console.log('Valid User: ' + data.status);
+                console.log('Removed Friend ' + fname + ": "  + data.status);
                 if(data.status === 'OK') {
 
                 }
                 else{
-                    alert("Invalid Username and/or Password");
+                    alert("Could not Remove Friend!\n");
                 }
             });
+    },
+
+    accept : function (uname, iname) {
+        var that = this;
+        $.ajax({
+            type        : 'POST',
+            url         : '/home/addfriend',
+            data        : {'uname' : uname, 'iname' : iname},
+            dataType    : 'json'
+        }).done(function (data) {
+            console.log('Added Friend ' + iname + ": "  + data.status);
+            if(data.status === 'OK') {
+
+            }
+            else{
+                alert("Could not Accept Invite!\n");
+            }
+        });
+    },
+
+    reject : function (uname, iname) {
+        var that = this;
+        $.ajax({
+            type        : 'POST',
+            url         : '/home/deleteinvite',
+            data        : {'uname' : uname, 'fname' : iname},
+            dataType    : 'json'
+        }).done(function (data) {
+            console.log('Rejected Invite ' + iname + ": "  + data.status);
+            if(data.status === 'OK') {
+
+            }
+            else{
+                alert("Could not Reject Invite!\n");
+            }
+        });
     }
 };
 
@@ -185,14 +221,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
     $("ul").on("click", "input.trash-button", function(e){
         e.preventDefault();
-        //homec.remove(uname);
+        var that = $(this).parent().find('label').find('input').val();
+        homec.remove("dcostigan@umass.edu", that);
         $(this).parent().remove();
     });
 
     $("ul").on("click", "input.accept-button", function(e){
         e.preventDefault();
-        //homec.accept(this);
         var that = $(this).parent().find('label').find('input').val();
+        homec.accept("dcostigan@umass.edu", that);
         var friendsList = document.getElementById('friends-list');
         var li = document.createElement("li");
         var label = document.createElement("label");
@@ -215,7 +252,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     $("ul").on("click", "input.delete-button", function(e){
         e.preventDefault();
-        //homec.reject(this);
+        var that = $(this).parent().find('label').find('input').val();
+        homec.reject("dcostigan@umass.edu", that);
         $(this).parent().remove();
     });
 
