@@ -180,22 +180,39 @@ document.addEventListener('DOMContentLoaded', function () {
         input   : username
     });
 
+    //CHANGE UNAME TO COOKIE STORED USER
     homec.poll("dcostigan@umass.edu", friendsList, invitationList);
 
     $("ul").on("click", "input.trash-button", function(e){
         e.preventDefault();
-        //var uname = this;
-        //console.log(uname);
         //homec.remove(uname);
         $(this).parent().remove();
     });
 
-    //$("ul").on("click", "input.accept-button", function(e){
-    //    e.preventDefault();
-    //    homec.accept(this);
-    //    $(this).parent().remove();
-    //});
-    //
+    $("ul").on("click", "input.accept-button", function(e){
+        e.preventDefault();
+        //homec.accept(this);
+        var that = $(this).parent().find('label').find('input').val();
+        var friendsList = document.getElementById('friends-list');
+        var li = document.createElement("li");
+        var label = document.createElement("label");
+        var input = document.createElement("input");
+        var button = document.createElement("input");
+        button.setAttribute('type', 'image');
+        button.setAttribute('class', 'trash-button');
+        button.setAttribute('src', '/images/trash.jpg');
+        button.setAttribute('alt', 'Remove');
+        input.setAttribute('type', 'text');
+        input.setAttribute('value', that);
+        input.setAttribute('class', 'form-control');
+        input.readOnly = true;
+        label.appendChild(input);
+        li.appendChild(label);
+        li.appendChild(button);
+        friendsList.appendChild(li);
+        $(this).parent().remove();
+    });
+
     $("ul").on("click", "input.delete-button", function(e){
         e.preventDefault();
         //homec.reject(this);
