@@ -6,15 +6,8 @@
  -->
 <html>
   <head>
-    <title>Setting Menu</title>
-    <style>
-      body {
-        font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
-        font-size: 100%;
-        width: 235px;
-      }
-    </style>
-
+    <title>SNP Navigator</title>
+    <link href="/public/stylesheets/popup.css" rel="stylesheet">
     <!--
       - JavaScript and HTML must be in separate files: see our Content Security
       - Policy documentation[1] for details and explanation.
@@ -26,14 +19,11 @@
   </head>
   <body>
     <div id="header" align="center"></div>
-    Your Current Session: <div id="status" align="center"></div>
+    <div id="status">Session: </div>
     <br>
-    Pause SNP<div id="pause" align="center"></div>
-    Settings<div id="settings" align="center"></div>
-    <br>
+    <input type="text" class="options" id="sign" readonly>
+    <input type="text" class="options" id="pause" value="Pause" readonly>
+    <input type="text" class="options" id="settings"  value="Settings" readonly>
   </body>
-  <footer align="center">
-    SNP &copy; Copyright 2015
-  </footer>
 </html>
 

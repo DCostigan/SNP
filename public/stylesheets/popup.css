@@ -1,36 +1,29 @@
-#titletext{
-    padding: 8px 8px 2px 0px;
-    padding-top: 8px;
-    padding-right: 8px;
-    padding-bottom: 2px;
-    padding-left: 0px;
-    text-align: center;
-}
-
 div {
     display: block;
 }
 
-#wrapper {
-    /*margin: 0px 0px;
-    width: 275px; */
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: 13px;
-    max-height: 600px;
-}
-
 body {
     font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
-    font-size: 75%;
+    font-size: 100%;
+    width: 250px;
+    height: 325px;
 }
 
-.menu-entry {
-    padding: 3px 4px 3px 8px;
+.options {
+    background-color: transparent;
+    border: none;
+    height: auto;
+    width: auto;
+    font-size: 20px;
     cursor: pointer;
+    margin-bottom: 10px;
 }
 
-.separator {
-    width: 100%;
-    border-top: 2px groove white;
-    margin: 5px -5px 5px -3px;
+.options:hover {
+    outline: none;
+    border: 2px solid #dadada;
+    border-radius: 7px;
+    border-color: #9ecaed;
+    box-shadow: 0 0 10px #9ecaed;
 }
+
