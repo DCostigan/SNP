@@ -6,8 +6,9 @@ body {
 
 .checkbox {
 	max-width: 160px;
-	position: fixed;
+	position: relative;
 	min-height: 25px;
+    float: left;
 }
 
 .create-user {

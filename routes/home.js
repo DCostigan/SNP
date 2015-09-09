@@ -48,7 +48,7 @@ router.post('/postupdates', function(req, res, next) {
 router.post('/checkuser', function(req, res, next) {
     console.log('Checking for User in Database!\n');
     var name = req.body.uname;
-    console.log(name + "\n");
+    console.log("Name: " + name + "\n");
 
     //CLEAR CACHED users[]  --OR--  KEEP SMALL USERS CACHE
     //CALL DATABASE FINDUSER
