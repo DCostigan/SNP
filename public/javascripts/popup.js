@@ -1,38 +1,3 @@
-//function loadScript(url, callback) {
-//    // Adding the script tag to the head as suggested before
-//    var head = document.getElementsByTagName('head')[0];
-//    var script = document.createElement('script');
-//    script.type = 'text/javascript';
-//    script.src = url;
-//
-//    // Then bind the event to the callback function.
-//    // There are several events for cross browser compatibility.
-//    script.onreadystatechange = callback;
-//    script.onload = callback;
-//
-//    // Fire the loading
-//    head.appendChild(script);
-//}
-//
-//document.addEventListener('DOMContentLoaded', function() {
-//    console.log('HelloApp!' + '\n');
-//    renderHeader();
-//    renderPublic('Your Public Key: ');
-//    renderTextField();
-//    //createButtonTypes( function (){
-//    //    renderButton();
-//    //});
-//    renderButton();
-//    //loadScript("/public/javascripts/snp-index.js", populateList);
-//    renderList();
-//    //loadScript("/public/javascripts/snp-index.js", buttonCreation);
-//
-//
-//
-//}, function(errorMessage) {
-//      renderStatus('Cannot display settings. ' + errorMessage);
-//});
-
 function openSettings (){
     chrome.tabs.create({ url: "http://localhost:3000" });
 }
@@ -68,6 +33,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var settings = document.getElementById('settings');
     var pause = document.getElementById('pause');
 
+    //IF THERE ARE COOKIES
     if(1){
         var div = document.getElementById('status');
         //GET USERNAME FROM COOKIES
@@ -77,6 +43,7 @@ document.addEventListener('DOMContentLoaded', function() {
         var input = document.getElementById('sign');
         input.setAttribute('value', 'Sign Out');
     }
+    //IF THERE ARE NO COOKIES
     else {
         var div = document.getElementById('status');
         var input = document.getElementById('sign');
