@@ -30,6 +30,7 @@ function readCookie(name) {
         i,
         cookie,
         nameEQ = name + '=';
+    console.log(cookies);
     for (i = 0; i < length; i += 1) {
         cookie = cookies[i];
         while (cookie.charAt(0) === ' ') {
@@ -54,6 +55,10 @@ function createCookie(name, value, days, cb) {
 
 function eraseCookie(name) {
     createCookie(name, '', -1);
+}
+
+function openIndex(){
+    window.location.assign("http://localhost:3000");
 }
 
 HomeClient.prototype = {
@@ -244,6 +249,12 @@ HomeClient.prototype = {
 
 document.addEventListener('DOMContentLoaded', function () {
     console.log("Entered DOMContentLoaded\n");
+    var url = "http://localhost:3000";
+    var cookie = readCookie(url);
+    console.log(cookie);
+    if(cookie === null){
+        openIndex();
+    }
     var username = $('#user-name');
     var addUser = $('#add-user');
     var friendsList = $('#friends-list');
