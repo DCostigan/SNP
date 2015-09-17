@@ -42,6 +42,20 @@ function readCookie(name) {
     return null;
 }
 
+function createCookie(name, value, days, cb) {
+    var expires = '',
+        date = new Date();
+    if (days) {
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        expires = '; expires=' + date.toGMTString();
+    }
+    document.cookie = name + '=' + value + expires + '; path=/';
+}
+
+function eraseCookie(name) {
+    createCookie(name, '', -1);
+}
+
 HomeClient.prototype = {
 
     friends : [],
@@ -248,6 +262,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     //CHANGE UNAME TO COOKIE STORED USER
     homec.poll("dcostigan@umass.edu", friendsList, invitationList);
+
+    $("ul").on("click", "a.logout", function(e){
+        var url = 'http://localhost:3000';
+        eraseCookie(url);
+    });
 
     $("ul").on("click", "input.trash-button", function(e){
         e.preventDefault();
