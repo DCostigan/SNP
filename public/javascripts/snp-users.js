@@ -24,6 +24,21 @@ function UserClient(config){
     }
 }
 
+function createCookie(name, value, days, cb) {
+    var expires = '',
+        date = new Date();
+    if (days) {
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        expires = '; expires=' + date.toGMTString();
+    }
+    document.cookie = name + '=' + value + expires + '; path=/';
+}
+
+function openHome(){
+    //SHOULD CLOSE ALL OPEN HOMES
+    window.location.assign("http://localhost:3000/home");
+}
+
 UserClient.prototype = {
 
     post : function (uname, password){
@@ -34,7 +49,8 @@ UserClient.prototype = {
             dataType    : 'json'
         }).done(function (data) {
             console.log('Post status: ' + data.status);
-            window.location.assign("http://localhost:3000/home");
+            var url = 'http://localhost:3000';
+            createCookie(url, uname, 1, openHome());
         });
     }
 };

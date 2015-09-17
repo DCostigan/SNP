@@ -30,7 +30,6 @@ function readCookie(name) {
         i,
         cookie,
         nameEQ = name + '=';
-    console.log(cookies);
     for (i = 0; i < length; i += 1) {
         cookie = cookies[i];
         while (cookie.charAt(0) === ' ') {

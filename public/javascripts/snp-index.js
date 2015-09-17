@@ -34,10 +34,6 @@ function createCookie(name, value, days, cb) {
     document.cookie = name + '=' + value + expires + '; path=/';
 }
 
-function eraseCookie(name) {
-    createCookie(name, '', -1);
-}
-
 function openHome(){
     //SHOULD CLOSE ALL OPEN HOMES
     window.location.assign("http://localhost:3000/home");
@@ -55,16 +51,8 @@ IndexClient.prototype = {
         }).done(function (data) {
             console.log('Valid User: ' + data.status);
             if(data.status === 'OK') {
-                var checkbox = $('#save');
                 var url = 'http://localhost:3000';
-                if(checkbox[0].checked) {
-                    var days = 2;
-                    createCookie(url, uname, openHome());
-                }
-                else{
-                    eraseCookie(url);
-                    openHome();
-                }
+                createCookie(url, uname, 1, openHome());
             }
             else{
                 alert("Invalid Username and/or Password");
