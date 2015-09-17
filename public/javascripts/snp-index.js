@@ -24,6 +24,25 @@ function IndexClient(config){
     }
 }
 
+function createCookie(name, value, days, cb) {
+    var expires = '',
+        date = new Date();
+    if (days) {
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        expires = '; expires=' + date.toGMTString();
+    }
+    document.cookie = name + '=' + value + expires + '; path=/';
+}
+
+function eraseCookie(name) {
+    createCookie(name, '', -1);
+}
+
+function openHome(){
+    //SHOULD CLOSE ALL OPEN HOMES
+    window.location.assign("http://localhost:3000/home");
+}
+
 IndexClient.prototype = {
 
     check : function (uname, password) {
@@ -36,7 +55,16 @@ IndexClient.prototype = {
         }).done(function (data) {
             console.log('Valid User: ' + data.status);
             if(data.status === 'OK') {
-                window.location.assign("http://localhost:3000/home");
+                var checkbox = $('#save');
+                var url = 'http://localhost:3000';
+                if(checkbox[0].checked) {
+                    var days = 2;
+                    createCookie(url, uname, openHome());
+                }
+                else{
+                    eraseCookie(url);
+                    openHome();
+                }
             }
             else{
                 alert("Invalid Username and/or Password");

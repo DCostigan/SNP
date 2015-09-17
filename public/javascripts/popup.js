@@ -1,5 +1,10 @@
-function openSettings (){
+function openHome (){
     chrome.tabs.create({ url: "http://localhost:3000" });
+}
+
+function openSettings (){
+    //SHOULD CLOSE ALL OPEN SETTINGS
+    chrome.tabs.create({url: "http://localhost:3000/home"});
 }
 
 function setPause (state){
@@ -26,32 +31,38 @@ function renderHeader(){
     header.appendChild(h2);
 }
 
-
 document.addEventListener('DOMContentLoaded', function() {
     var pausedFlag = 0;
+    var activeSession = 0;
+    var cookieUser = '';
     renderHeader();
     var settings = document.getElementById('settings');
     var pause = document.getElementById('pause');
+    var sign = document.getElementById('sign');
 
     //IF THERE ARE COOKIES
-    if(1){
-        var div = document.getElementById('status');
-        //GET USERNAME FROM COOKIES
-        var cookieUser = "dcostigan@umass.edu";
-        var text = document.createTextNode(cookieUser);
-        div.appendChild(text);
-        var input = document.getElementById('sign');
-        input.setAttribute('value', 'Sign Out');
-    }
-    //IF THERE ARE NO COOKIES
-    else {
-        var div = document.getElementById('status');
-        var input = document.getElementById('sign');
-        input.setAttribute('value', 'Sign In');
-    }
+    var port = chrome.runtime.connect({name: "bkgrd"});
+    port.onMessage.addListener(function(msg){
+        if(msg.uname){
+            console.log('USER SESSION: ' + msg.uname);
+            activeSession = 1;
+            var div = document.getElementById('status');
+            //GET USERNAME FROM COOKIES
+            cookieUser = msg.uname;
+            var text = document.createTextNode(cookieUser);
+            div.appendChild(text);
+        }
+        else{
+            console.log('NO SESSION!');
+            var div = document.getElementById('status');
+        }
+    });
 
     settings.addEventListener('click', function (){
-        openSettings();
+        if(activeSession)
+            openSettings();
+        else
+            openHome();
     });
 
     pause.addEventListener('click', function (){

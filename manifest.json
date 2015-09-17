@@ -15,10 +15,9 @@
     "scripts": ["/public/javascripts/background.js"]
   },
 
-  "permissions": [
-    "activeTab",
-    "https://ajax.googleapis.com/"
-  ],
+  "permissions": [ "cookies", "tabs", "http://*/*", "https://*/*" ],
+
+  "icons": { "16": "/public/images/icon4.png", "48": "/public/images/icon4.png", "128": "/public/images/icon4.png" },
 
   "author": "Derek Costigan"
 }
