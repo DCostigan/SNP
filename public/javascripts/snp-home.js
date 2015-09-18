@@ -318,6 +318,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     addButton.createListener('click', function(event){
         event.preventDefault();
+        var cookie = readCookie(url);
+        if(cookie === null){
+            openIndex();
+            return;
+        }
         console.log(this);
         console.log("Hit addButton!\n");
         var text = this.input.val();
