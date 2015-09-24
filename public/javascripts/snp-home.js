@@ -253,6 +253,7 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log(cookie);
     if(cookie === null){
         openIndex();
+        return;
     }
     var username = $('#user-name');
     var addUser = $('#add-user');
