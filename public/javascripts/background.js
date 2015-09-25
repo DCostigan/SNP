@@ -17,7 +17,7 @@ chrome.runtime.onConnect.addListener(function(port){
 var tabIDFacebook = [];
 var tabIDTwitter = [];
 
-function mySuperCallback(tab){
+function checkWebsite(tab){
     var fbtabexists = 0;
     var twtabexists = 0;
     if(tab.url === "https://www.facebook.com/"){
@@ -61,7 +61,7 @@ function mySuperCallback(tab){
 chrome.tabs.onActivated.addListener(function(activeInfo){
     console.log("Entering onActivated Listener\n");
     chrome.tabs.get(activeInfo.tabId, function(tab){
-        mySuperCallback(tab);
+        checkWebsite(tab);
     });
 });
 
@@ -70,7 +70,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
     chrome.tabs.query({'active': true}, function (activeTabs){
         var activeTab = activeTabs[0];
         if(activeTab.id === tab.id){
-            mySuperCallback(activeTab);
+            checkWebsite(activeTab);
         }
     });
     var newTab = 1;
@@ -131,6 +131,3 @@ chrome.tabs.onRemoved.addListener(function(tabId, removeInfo){
         }
     }
 });
-
-
-//TRIGGER ACTIVE ON UPDATE

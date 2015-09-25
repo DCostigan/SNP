@@ -1,12 +1,15 @@
 console.log("TWITTER CONTENT SCRIPT\n");
 
 var postButton = document.getElementsByClassName("btn primary-btn tweet-action tweet-btn js-tweet-btn");
-console.log(postButton[0]);
 
 postButton[0].addEventListener("mouseover", function(event){
-    console.log("Hit Event Listener");
     var postField = document.getElementById("tweet-box-home-timeline");
     var postFieldText = postField.childNodes[0];
-    console.log(postFieldText);
    postFieldText.innerText = "jumbled text";
 });
+var stream = document.getElementsByClassName("TweetTextSize  js-tweet-text tweet-text");
+for(var tweet = 0; tweet<stream.length;tweet++){
+    if(stream[tweet].innerText.search("umbled") === 1){ //SEARCH CUTS OFF THE FIRST CHARACTER
+        console.log("Found jumbled text on ", tweet, stream[tweet].innerText);
+    }
+}
