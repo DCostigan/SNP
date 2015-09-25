@@ -7,9 +7,11 @@ postButton[0].addEventListener("mouseover", function(event){
     var postFieldText = postField.childNodes[0];
    postFieldText.innerText = "jumbled text";
 });
+
 var stream = document.getElementsByClassName("TweetTextSize  js-tweet-text tweet-text");
 for(var tweet = 0; tweet<stream.length;tweet++){
-    if(stream[tweet].innerText.search("umbled") === 1){ //SEARCH CUTS OFF THE FIRST CHARACTER
+    if(stream[tweet].innerText.search("jumbled") !== -1){ //SEARCH CUTS OFF THE FIRST CHARACTER
         console.log("Found jumbled text on ", tweet, stream[tweet].innerText);
+        stream[tweet].innerText = "GOTCHA!";
     }
 }
