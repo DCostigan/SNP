@@ -21,8 +21,6 @@ function checkWebsite(tab){
     var fbtabexists = 0;
     var twtabexists = 0;
     if(tab.url === "https://www.facebook.com/"){
-        console.log("Facebook\n");
-        console.log(tab.id);
         chrome.tabs.executeScript(tab.id, {file: "/public/javascripts/facebook.js"}, function(){
             console.log("Finished facebook script execution!\n");
         });
@@ -36,11 +34,9 @@ function checkWebsite(tab){
         }
     }
     else{
-        console.log("Not Facebook\n");
+        //NOT FACEBOOK
     }
     if(tab.url === "https://twitter.com/"){
-        console.log("Twitter\n");
-        console.log(tab.id);
         chrome.tabs.executeScript(tab.id, {file: "/public/javascripts/twitter.js"}, function(){
             console.log("Finished twitter script execution!\n");
         });
@@ -54,7 +50,7 @@ function checkWebsite(tab){
         }
     }
     else{
-        console.log("Not Twitter\n");
+        //NOT TWITTER
     }
 }
 
@@ -80,10 +76,10 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
             if(changeInfo && changeInfo.status === 'complete'){
                 if(tab.url === "https://www.facebook.com/"){
                     //KEEP ID IN CACHE
-                    console.log("Keeping tab as Facebook\n");
+                    //KEEP TAB AS FACEBOOK
                 }
                 else {
-                    console.log("Removing tab as it is no longer facebook\n");
+                    //REMOVING FACEBOOK TAB
                     tabIDFacebook.splice(i, 1);
                 }
             }
@@ -95,10 +91,10 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
             if(changeInfo && changeInfo.status === 'complete'){
                 if(tab.url === "https://twitter.com/"){
                     //KEEP ID IN CACHE
-                    console.log("Keeping tab as Twitter\n");
+                    //KEEP TAB AS TWITTER
                 }
                 else {
-                    console.log("Removing tab as it is no longer twitter\n");
+                    //REMOVING TWITTER TAB
                     tabIDTwitter.splice(i, 1);
                 }
             }
@@ -106,11 +102,11 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
     }
     if(newTab && changeInfo && changeInfo.status === 'complete'){
         if(tab.url === "https://www.facebook.com/") {
-            console.log("Adding new Facebook tab\n");
+            //ADDING FACEBOOK TAB
             tabIDFacebook.push(tab.id);
         }
         if(tab.url === "https://twitter.com/") {
-            console.log("Adding new Twitter tab\n");
+            //REMOVING FACEBOOK TAB
             tabIDTwitter.push(tab.id);
         }
     }
@@ -120,13 +116,13 @@ chrome.tabs.onRemoved.addListener(function(tabId, removeInfo){
     console.log("Entering onRemoved");
    for(var i in tabIDFacebook){
        if(tabId === tabIDFacebook[i]){
-           console.log("Removed Facebook tab");
+           //FACEBOOK TAB WAS DELETED
            tabIDFacebook.splice(i, 1);
        }
    }
     for(var i in tabIDTwitter){
         if(tabId === tabIDTwitter[i]){
-            console.log("Removed Twitter tab");
+            //TWITTER TAB WAS DELETED
             tabIDTwitter.splice(i, 1);
         }
     }
