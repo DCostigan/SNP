@@ -12,9 +12,6 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 var home = require('./routes/home');
 
-//var getUsername = "admin@test.com";
-//var getPassword = "password";
-
 var app = express();
 
 // view engine setup

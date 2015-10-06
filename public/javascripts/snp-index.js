@@ -36,7 +36,7 @@ function createCookie(name, value, days, cb) {
 
 function openHome(){
     //SHOULD CLOSE ALL OPEN HOMES
-    window.location.assign("http://localhost:3000/home");
+    window.location.assign("https://localhost:3030/home");
 }
 
 IndexClient.prototype = {

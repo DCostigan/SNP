@@ -57,7 +57,7 @@ function eraseCookie(name) {
 }
 
 function openIndex(){
-    window.location.assign("http://localhost:3000");
+    window.location.assign("https://localhost:3030");
 }
 
 HomeClient.prototype = {
