@@ -4,12 +4,16 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+//var crypto = require('crypto');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var home = require('./routes/home');
 
 var app = express();
+//var auth = express.basicAuth(function(username, password, callback){
+//  var cipher
+//});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
