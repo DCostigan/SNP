@@ -4,16 +4,17 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-//var crypto = require('crypto');
+var https = require('https');
+var fs = require('fs');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var home = require('./routes/home');
 
+//var getUsername = "admin@test.com";
+//var getPassword = "password";
+
 var app = express();
-//var auth = express.basicAuth(function(username, password, callback){
-//  var cipher
-//});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -62,5 +63,14 @@ app.use(function(err, req, res, next) {
   });
 });
 
+var options = {
+  key: fs.readFileSync('./agent2-key.pem'),
+  cert: fs.readFileSync('./agent2-cert.pem')
+};
+
+https.createServer(options, function(req,res) {
+  res.writeHead(200);
+  res.end("Hello World\n");
+}).listen(3030);
 
 module.exports = app;
