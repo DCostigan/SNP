@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var https = require('https');
 var fs = require('fs');
+var http = require('http');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -68,9 +69,6 @@ var options = {
   cert: fs.readFileSync('./agent2-cert.pem')
 };
 
-https.createServer(options, function(req,res) {
-  res.writeHead(200);
-  res.end("Hello World\n");
-}).listen(3030);
+https.createServer(options, app).listen(3030);
 
 module.exports = app;
