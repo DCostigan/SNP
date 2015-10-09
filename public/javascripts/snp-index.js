@@ -24,6 +24,10 @@ function IndexClient(config){
     }
 }
 
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min)) + min;
+}
+
 function createCookie(name, value, days, cb) {
     var expires = '',
         date = new Date();
@@ -31,7 +35,8 @@ function createCookie(name, value, days, cb) {
         date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
         expires = '; expires=' + date.toGMTString();
     }
-    document.cookie = name + '=' + value + expires + '; path=/';
+    var securityKey = getRandomInt(12345723691085,9245788002198778345);
+    document.cookie = name + '=' + value +','+ securityKey + expires + '; path=/';
 }
 
 function openHome(){

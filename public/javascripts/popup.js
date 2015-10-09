@@ -49,6 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
             var div = document.getElementById('status');
             //GET USERNAME FROM COOKIES
             cookieUser = msg.uname;
+            cookieUser = cookieUser.substring(0, cookieUser.indexOf(','));
             var text = document.createTextNode(cookieUser);
             div.appendChild(text);
         }
