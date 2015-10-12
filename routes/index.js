@@ -6,6 +6,12 @@ function User(name, pass) {
   this.pass = pass;
 }
 
+var Users = [];
+
+var pg = require('pg');
+var crypto = require("crypto");
+var conString = 'postgres://postgres:Redbird777@localhost:5432/snp';
+
 //function ensureHTTPS(req, res, next){
 //  if(req.secure){
 //    return next();
