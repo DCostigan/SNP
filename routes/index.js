@@ -1,5 +1,8 @@
 var express = require('express');
 var router = express.Router();
+var pg = require('pg');
+var crypto = require("crypto");
+var conString = 'postgres://postgres:Redbird777@localhost:5432/snp';
 
 function User(name, pass) {
   this.name = name;
@@ -8,18 +11,23 @@ function User(name, pass) {
 
 var Users = [];
 
-var pg = require('pg');
-var crypto = require("crypto");
-var conString = 'postgres://postgres:Redbird777@localhost:5432/snp';
-
-//function ensureHTTPS(req, res, next){
-//  if(req.secure){
-//    return next();
-//  };
-//  res.redirect('https://'+req.host+":3030");
-//};
-//
-//router.all('*', ensureHTTPS);
+function verifyUser(name, pass){
+  client.connect();
+  var query = client.query("SELECT EXISTS(SELECT 1 FROM USERINFO WHERE USERINFO.uname = $1 AND USERINFO.password = $2", [name, pass]);
+  query.on("error", function(){
+    console.log("SOMETHING WENT HORRIBLE WITH THE QUERY\n");
+  });
+  query.on("row", function(row, result){
+    result.addRow(row);
+  });
+  query.on("end", function(result){
+    client.end();
+    if(result.rows.length > 0)
+      return 1;
+    else
+      return 0;
+  });
+}
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -36,13 +44,18 @@ router.post('/checkuser', function(req, res, next) {
     console.log('Checking for User in Database!\n');
     var name = req.body.uname;
     var pass = req.body.password;
-    console.log(name + ' ' + pass + "\n");
+    var shasum = crypto.createHash('sha1');
+    shasum.update(pass);
+    var hex = shasum.digest('hex');
 
     //CLEAR CACHED users[]  --OR--  KEEP SMALL USERS CACHE
     //CALL DATABASE FINDUSER
     var foundUser = 1;
+    //checkCache(name, hex);
+
+    //verifyUser(name, hex);
     //IF USER IS IN DB PUSH TO CACHE ARRAY
-    var response = ({status: 'INVALID'})
+    var response = ({status: 'INVALID'});
     if (foundUser)
       response = ({status: 'OK'});
     res.json(response);

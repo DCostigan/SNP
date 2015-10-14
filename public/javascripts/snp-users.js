@@ -54,8 +54,13 @@ UserClient.prototype = {
             dataType    : 'json'
         }).done(function (data) {
             console.log('Post status: ' + data.status);
-            var url = 'http://localhost:3000';
-            createCookie(url, uname, 1, openHome());
+            if(data.status === 'OK') {
+                var url = 'http://localhost:3000';
+                createCookie(url, uname, 1, openHome());
+            }
+            else{
+                alert("User Is Already Taken!");
+            }
         });
     }
 };
@@ -92,6 +97,10 @@ document.addEventListener('DOMContentLoaded', function () {
             return false;
         }
         var injectionProofPassword = text2.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        if(injectionProofUsername === '' || injectionProofPassword === ''){
+            alert("Invalid Username And/Or Password!\n");
+            return false;
+        }
         userc.post(injectionProofUsername, injectionProofPassword);
         return false;
     });
