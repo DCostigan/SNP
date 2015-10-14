@@ -65,12 +65,12 @@ HomeClient.prototype = {
     friends : [],
     invitations : [],
 
-    poll : function (uname, friendsList, invitationList) {
+    poll : function (uname, session, friendsList, invitationList) {
         var that = this;
         $.ajax({
             type: 'POST',
             url: '/home/postupdates',
-            data: { 'uname' : uname, lastFriend: that.friends.length, lastInvitation: that.invitations.length},
+            data: { 'uname' : uname, 'session': session, lastFriend: that.friends.length, lastInvitation: that.invitations.length},
             dataType: 'json'
         }).done(function (data) {
             console.log('Check rcvd friends & invitations: ' + JSON.stringify(data));
@@ -158,12 +158,12 @@ HomeClient.prototype = {
         });
     },
 
-    check : function (uname) {
+    check : function (cookiename, uname) {
         var that = this;
         $.ajax({
             type: 'POST',
             url: '/home/checkuser',
-            data: {'uname': uname},
+            data: {'cookiename': cookiename, 'uname': uname},
             dataType: 'json'
         }).done(function (data) {
             console.log('Valid User: ' + data.status);
@@ -250,7 +250,9 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log("Entered DOMContentLoaded\n");
     var url = "http://localhost:3000";
     var cookie = readCookie(url);
-    console.log(cookie);
+    var cookieUser = cookie.substring(0, cookie.indexOf(','));
+    var cookieSession = cookie.substring(cookie.indexOf(',')+1, cookie.length);
+
     if(cookie === null){
         openIndex();
         return;
@@ -272,7 +274,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     //CHANGE UNAME TO COOKIE STORED USER
-    homec.poll("dcostigan@umass.edu", friendsList, invitationList);
+    homec.poll(cookieUser, cookieSession, friendsList, invitationList);
 
     $("ul").on("click", "a.logout", function(e){
         var url = 'http://localhost:3000';
@@ -330,7 +332,9 @@ document.addEventListener('DOMContentLoaded', function () {
         console.log("AddButton Text: " + text + "\n");
         document.getElementById("user-name").value = '';
         var injectionProofUsername = text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-        homec.check(injectionProofUsername);
+        if(injectionProofUsername === '')
+            return false;
+        homec.check(cookieUser, injectionProofUsername);
         return false;
     });
 });

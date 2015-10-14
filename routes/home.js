@@ -1,8 +1,12 @@
 var express = require('express');
 var router = express.Router();
+var pg = require('pg');
+var crypto = require("crypto");
+var conString = 'postgres://postgres:Redbird777@localhost:5432/snp';
 
 var friends = [];
 var invites = [];
+var Users = [];
 
 function friend(uname, fname){
     this.uname = uname;
@@ -13,6 +17,81 @@ function invite(uname, iname, type){
     this.uname = uname;
     this.iname = iname;
     this.type = type;
+}
+
+function User(name) {
+    this.name = name;
+}
+
+function checkUserCache(name){
+    for(var i = 0;i<Users.length;i++){
+        if(Users[i].name === name){
+            return 1;
+        }
+    }
+    return 0;
+}
+
+function addToUserCache(name) {
+    if (Users.length < 10) {
+        Users.push(new User(name));
+    }
+    else if (Users.length > 10) {
+        Users.splice(0, Users.length);
+        Users.push(new User(name));
+    }
+}
+
+function checkUserExists(name, cb){
+    var client = new pg.Client(conString);
+    client.connect();
+    var query = client.query("SELECT EXISTS (SELECT 1 FROM USERINFO WHERE USERINFO.uname = $1)", [name]);
+    query.on('error', function(error){
+        console.log("GOT A QUERY ERROR on checkUserExists\n " + error);
+    });
+    query.on("row", function(row, result){
+        result.addRow(row);
+    });
+    query.on("end", function(result){
+        client.end();
+        cb(result.rows);
+    });
+}
+
+function sendInviteToUser(sname, rname, cb){
+    var client = new pg.Client(conString);
+    client.connect();
+    var oneResult = 0;
+    var twoResult = 0;
+    var queryOne = client.query("SELECT id FROM USERINFO WHERE uname = $1", [sname]);
+    queryOne.on('error', function(error){
+        console.log("GOT A QUERY ERROR on sendInviteToUser getting ID from sname\n " + error);
+    });
+    queryOne.on("row", function(row, result){
+        result.addRow(row);
+    });
+    queryOne.on("end", function(result){
+        console.log(result.rows[0].id);
+        oneResult = result.rows[0].id;
+        var queryTwo = client.query("SELECT id FROM USERINFO WHERE uname = $1", [rname]);
+        queryTwo.on('error', function(error){
+            console.log("GOT A QUERY ERROR on sendInviteToUser getting ID from rname\n " + error);
+        });
+        queryTwo.on("row", function(row, result){
+            result.addRow(row);
+        });
+        queryTwo.on("end", function(result){
+            twoResult = result.rows[0].id;
+            var queryThree = client.query("INSERT INTO INVITES VALUES($1, $2)", [oneResult, twoResult]);
+            queryThree.on('error', function(error){
+                console.log("GOT A QUERY ERROR on sendInviteToUser inserting values\n " + error);
+            });
+            queryThree.on("end", function(result){
+                client.end();
+                cb();
+            });
+        });
+    });
 }
 
 /* GET home page. */
@@ -31,26 +110,34 @@ router.post('/postupdates', function(req, res, next) {
     if(req.secure) {
         console.log('Entering Post Updates!\n');
         var name = req.body.uname;
-        console.log(name + "\n");
+        var session = req.body.session;
+        console.log(name + session + "\n");
 
         //GET FRIENDS FOR NAME
-        //GET INVITES FOR NAME
-        //CLEAR FRIENDS AND INVITE CACHE
-        friends.splice(0, friends.length);
-        invites.splice(0, invites.length);
+        retreiveFriends(name, function(){
+            retreiveInvites(name, function(result){
+                friends.splice(0, friends.length);
+                invites.splice(0, invites.length);
 
-        // IF FOUND PUSH TO CACHE ARRAY
-        friends.push(new friend(name, "friend@test.com"));
-        invites.push(new invite(name, "invite@test.com", "sent"));
-        invites.push(new invite(name, "invite@test.com", "received"));
+                if(result.length > 1){
+                    for(var i = 0;i<result.length;i++){
+                        
+                    }
+                }
+                // IF FOUND PUSH TO CACHE ARRAY
+                friends.push(new friend(name, "friend@test.com"));
+                invites.push(new invite(name, "invite@test.com", "sent"));
+                invites.push(new invite(name, "invite@test.com", "received"));
 
-        var lastFriend = parseInt(req.body.lastFriend, 10);
-        var lastInvite = parseInt(req.body.lastInvitation, 10);
+                var lastFriend = parseInt(req.body.lastFriend, 10);
+                var lastInvite = parseInt(req.body.lastInvitation, 10);
 
-        var restFriend = friends.slice(lastFriend, friends.length);
-        var restInvite = invites.slice(lastInvite, invites.length);
-        var fullJSON = restFriend.concat(restInvite);
-        res.json(fullJSON);
+                var restFriend = friends.slice(lastFriend, friends.length);
+                var restInvite = invites.slice(lastInvite, invites.length);
+                var fullJSON = restFriend.concat(restInvite);
+                res.json(fullJSON);
+            });
+        });
     }
     else{
         res.redirect('https://'+req.hostname+":3030"+home+that);
@@ -63,17 +150,28 @@ router.post('/checkuser', function(req, res, next) {
     if(req.secure) {
         console.log('Checking for User in Database!\n');
         var name = req.body.uname;
-        console.log("Name: " + name + "\n");
-
-        //CLEAR CACHED users[]  --OR--  KEEP SMALL USERS CACHE
-        //CALL DATABASE FINDUSER
-        var foundUser = 1;
-        //IF USER IS IN DB PUSH TO CACHE ARRAY
-        //SEND INVITATION TO USER W/ THIS NAME
-        var response = ({status: 'INVALID'})
-        if (foundUser)
-            response = ({status: 'OK'});
-        res.json(response);
+        var cookie = req.body.cookiename;
+        var userExists = checkUserCache(name);
+        if(userExists){
+            console.log("User Already Exists in Cache!");
+            sendInviteToUser(cookie, name, function(){
+                res.json({status: 'OK'});
+            });
+        }
+        else{
+            checkUserExists(name, function(result){
+                if(result[0].exists === true){
+                    addToUserCache(name);
+                    console.log("User Already Exists in DB!");
+                    sendInviteToUser(cookie, name, function(){
+                        res.json({status: 'OK'});
+                    });
+                }
+                else{
+                    res.json({status: 'INVALID'});
+                }
+            });
+        }
     }
     else
         res.redirect('https://'+req.hostname+":3030"+home+that);

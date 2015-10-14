@@ -31,7 +31,6 @@ function checkUserExists(name, cb){
   var client = new pg.Client(conString);
   client.connect();
   var query = client.query("SELECT EXISTS (SELECT 1 FROM USERINFO WHERE USERINFO.uname = $1)", [name]);
-  console.log(query);
   query.on('error', function(error){
     console.log("GOT A QUERY ERROR on checkUserExists\n " + error);
   });

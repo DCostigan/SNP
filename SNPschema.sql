@@ -19,3 +19,15 @@ CREATE TABLE SESSIONS
 	id int references USERINFO(id),
 	session varchar(150)
 );
+
+CREATE TABLE INVITES
+(
+	sid int references USERINFO(id),
+	rid int references USERINFO(id)
+);
+
+CREATE TABLE FRIENDS
+(
+	fid int references USERINFO(id),
+	fid2 int references USERINFO(id)
+);
