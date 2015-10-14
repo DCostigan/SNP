@@ -90,6 +90,10 @@ document.addEventListener('DOMContentLoaded', function () {
         //$('#event-name').prop('readonly', true);
         var text2 = this.input2.val();
         var injectionProofPassword = text2.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        if(injectionProofUsername === '' || injectionProofPassword === ''){
+            alert("Invalid Username And/Or Password!\n");
+            return false;
+        }
         indexc.check(injectionProofUsername, injectionProofPassword);
         return false;
     });
