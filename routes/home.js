@@ -350,16 +350,9 @@ router.post('/deleteinvite', function(req, res, next) {
         var iname = req.body.iname;
         console.log(name + " " + iname + "\n");
 
-        //GET FRIENDS FOR NAME
-        //REMOVE FRIEND W/ FNAME FROM LIST
-
-        var removedInvite = 1;
-        //IF USER IS IN DB PUSH TO CACHE ARRAY
-        //REMOVE ASSOCIATION W/ CURRENT USER
-        var response = ({status: 'FAILED'})
-        if (removedInvite)
-            response = ({status: 'OK'});
-        res.json(response);
+        removeInvite(name, iname, function(){
+            res.json({status: 'OK'});
+        });
     }
     else
         res.redirect('https://'+req.hostname+":3030"+home+that);

@@ -236,12 +236,11 @@ HomeClient.prototype = {
         $.ajax({
             type        : 'POST',
             url         : '/home/deleteinvite',
-            data        : {'uname' : uname, 'fname' : iname},
+            data        : {'uname' : uname, 'iname' : iname},
             dataType    : 'json'
         }).done(function (data) {
-            console.log('Rejected Invite ' + iname + ": "  + data.status);
             if(data.status === 'OK') {
-
+                console.log('Rejected Invite ' + iname + ": "  + data.status);
             }
             else{
                 alert("Could not Reject Invite!\n");
