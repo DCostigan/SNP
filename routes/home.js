@@ -184,6 +184,19 @@ function addFriend(name, iname, cb){
     });
 }
 
+function removeInvite(name, iname, cb){
+    var client = new pg.Client(conString);
+    client.connect();
+    var query = client.query("DELETE FROM INVITES WHERE (sid = (SELECT id FROM USERINFO WHERE uname = $1) AND rid = (SELECT id FROM USERINFO WHERE uname = $2)) OR (sid = (SELECT id FROM USERINFO WHERE uname = $3) AND rid = (SELECT id FROM USERINFO WHERE uname = $4))", [name,iname,iname,name]);
+    query.on('error', function(error){
+        console.log("GOT A QUERY ERROR on removeFriend\n " + error);
+    });
+    query.on("end", function(){
+        client.end();
+        cb();
+    });
+}
+
 /* GET home page. */
 router.get('/', function(req, res, next) {
     var that = '/';
@@ -317,9 +330,11 @@ router.post('/addfriend', function(req, res, next) {
         console.log(name + " " + iname + "\n");
 
         addFriend(name, iname, function(){
-            //DO SOMETHING ABOUT Pkeys
-            //IF USER IS IN DB PUSH TO CACHE ARRAY
-            res.json({status: 'OK'});
+            removeInvite(name, iname, function(){
+                //DO SOMETHING ABOUT Pkeys
+                //IF USER IS IN DB PUSH TO CACHE ARRAY
+                res.json({status: 'OK'});
+            });
         });
     }
     else
