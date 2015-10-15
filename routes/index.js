@@ -46,6 +46,20 @@ function addToCache(name, hex) {
   }
 }
 
+function updateActiveSession(name, session, cb){
+  var client = new pg.Client(conString);
+  client.connect();
+  var query = client.query("UPDATE SESSIONS SET session=$1 WHERE id = (SELECT id FROM USERINFO WHERE uname=$2)", [session, name]);
+  query.on('error', function(error){
+    console.log("GOT A QUERY ERROR on updateActiveSession\n " + error);
+  });
+  query.on("end", function(){
+    client.end();
+    cb();
+  });
+}
+
+
 /* GET home page. */
 router.get('/', function(req, res, next) {
   var that = '/';
@@ -61,20 +75,28 @@ router.post('/checkuser', function(req, res, next) {
     console.log('Checking for User in Database!\n');
     var name = req.body.uname;
     var pass = req.body.password;
+    var key = req.body.securityKey;
     var shasum = crypto.createHash('sha1');
+    var shakey = crypto.createHash('sha1');
     shasum.update(pass);
+    shakey.update(key);
     var hex = shasum.digest('hex');
+    var hexkey = shakey.digest('hex');
     var userExists = checkUserCache(name, hex);
     if(userExists){
       console.log("User Already Exists in Cache!");
-      res.json({status: 'OK'});
+      updateActiveSession(name, hexkey, function(){
+        res.json({status: 'OK'});
+      });
     }
     else{
       checkUserPassExists(name, hex, function(result){
         if(result[0].exists === true){
           addToCache(name, hex);
           console.log("User Already Exists in DB!");
-          res.json({status: 'OK'});
+          updateActiveSession(name, hexkey, function(){
+            res.json({status: 'OK'});
+          });
         }
         else{
           res.json({status: 'INVALID'});
