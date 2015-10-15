@@ -205,9 +205,8 @@ HomeClient.prototype = {
                 data        : {'uname' : uname, 'fname' : fname},
                 dataType    : 'json'
             }).done(function (data) {
-                console.log('Removed Friend ' + fname + ": "  + data.status);
                 if(data.status === 'OK') {
-
+                    console.log('Removed Friend ' + fname + ": "  + data.status);
                 }
                 else{
                     alert("Could not Remove Friend!\n");
@@ -223,9 +222,8 @@ HomeClient.prototype = {
             data        : {'uname' : uname, 'iname' : iname},
             dataType    : 'json'
         }).done(function (data) {
-            console.log('Added Friend ' + iname + ": "  + data.status);
             if(data.status === 'OK') {
-
+                console.log('Added Friend ' + iname + ": "  + data.status);
             }
             else{
                 alert("Could not Accept Invite!\n");
@@ -291,14 +289,14 @@ document.addEventListener('DOMContentLoaded', function () {
     $("ul").on("click", "input.trash-button", function(e){
         e.preventDefault();
         var that = $(this).parent().find('label').find('input').val();
-        homec.remove("dcostigan@umass.edu", that);
+        homec.remove(cookieUser, that);
         $(this).parent().remove();
     });
 
     $("ul").on("click", "input.accept-button", function(e){
         e.preventDefault();
         var that = $(this).parent().find('label').find('input').val();
-        homec.accept("dcostigan@umass.edu", that);
+        homec.accept(cookieUser, that);
         var friendsList = document.getElementById('friends-list');
         var li = document.createElement("li");
         var label = document.createElement("label");
@@ -322,7 +320,7 @@ document.addEventListener('DOMContentLoaded', function () {
     $("ul").on("click", "input.delete-button", function(e){
         e.preventDefault();
         var that = $(this).parent().find('label').find('input').val();
-        homec.reject("dcostigan@umass.edu", that);
+        homec.reject(cookieUser, that);
         $(this).parent().remove();
     });
 

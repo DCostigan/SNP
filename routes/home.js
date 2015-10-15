@@ -158,6 +158,32 @@ function validateSession(name, session, cb){
     });
 }
 
+function removeFriend(name, fname, cb){
+    var client = new pg.Client(conString);
+    client.connect();
+    var query = client.query("DELETE FROM FRIENDS WHERE (fid = (SELECT id FROM USERINFO WHERE uname = $1) AND fid2 = (SELECT id FROM USERINFO WHERE uname = $2)) OR (fid = (SELECT id FROM USERINFO WHERE uname = $3) AND fid2 = (SELECT id FROM USERINFO WHERE uname = $4))", [name,fname,fname,name]);
+    query.on('error', function(error){
+        console.log("GOT A QUERY ERROR on removeFriend\n " + error);
+    });
+    query.on("end", function(){
+        client.end();
+        cb();
+    });
+}
+
+function addFriend(name, iname, cb){
+    var client = new pg.Client(conString);
+    client.connect();
+    var query = client.query("INSERT INTO FRIENDS VALUES ((SELECT id FROM USERINFO WHERE uname = $1), (SELECT id FROM USERINFO WHERE uname = $2))", [name, iname]);
+    query.on('error', function(error){
+        console.log("GOT A QUERY ERROR on removeFriend\n " + error);
+    });
+    query.on("end", function(){
+        client.end();
+        cb();
+    });
+}
+
 /* GET home page. */
 router.get('/', function(req, res, next) {
     var that = '/';
@@ -207,7 +233,7 @@ router.post('/postupdates', function(req, res, next) {
                             // IF FOUND PUSH TO CACHE ARRAY
                             if(result.length > 0){
                                 for(var i = 0;i<result.length;i++){
-                                    invites.push(new invite(result[i].sname, result[i].rname, "received"));
+                                    invites.push(new invite(result[i].rname, result[i].sname, "received"));
                                 }
                             }
 
@@ -271,16 +297,11 @@ router.post('/removefriend', function(req, res, next) {
         var fname = req.body.fname;
         console.log(name + " " + fname + "\n");
 
-        //GET FRIENDS FOR NAME
-        //REMOVE FRIEND W/ FNAME FROM LIST
-
-        var removedFriend = 1;
-        //IF USER IS IN DB PUSH TO CACHE ARRAY
-        //REMOVE ASSOCIATION W/ CURRENT USER
-        var response = ({status: 'FAILED'})
-        if (removedFriend)
-            response = ({status: 'OK'});
-        res.json(response);
+        removeFriend(name, fname, function(){
+            //DO SOMETHING ABOUT PKeys
+            //IF USER IS IN DB PUSH TO CACHE ARRAY
+            res.json({status: 'OK'});
+        });
     }
     else
         res.redirect('https://'+req.hostname+":3030"+home+that);
@@ -295,16 +316,11 @@ router.post('/addfriend', function(req, res, next) {
         var iname = req.body.iname;
         console.log(name + " " + iname + "\n");
 
-        //GET FRIENDS FOR NAME
-        //REMOVE FRIEND W/ FNAME FROM LIST
-
-        var addedFriend = 1;
-        //IF USER IS IN DB PUSH TO CACHE ARRAY
-        //REMOVE ASSOCIATION W/ CURRENT USER
-        var response = ({status: 'FAILED'})
-        if (addedFriend)
-            response = ({status: 'OK'});
-        res.json(response);
+        addFriend(name, iname, function(){
+            //DO SOMETHING ABOUT Pkeys
+            //IF USER IS IN DB PUSH TO CACHE ARRAY
+            res.json({status: 'OK'});
+        });
     }
     else
         res.redirect('https://'+req.hostname+":3030"+home+that);
