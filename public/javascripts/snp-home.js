@@ -277,6 +277,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     $("ul").on("click", "a.logout", function(e){
         var url = 'http://localhost:3000';
+        //needs to delete session from db
         eraseCookie(url);
     });
 

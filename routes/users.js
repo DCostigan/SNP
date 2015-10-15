@@ -93,7 +93,10 @@ router.post('/postuser', function(req, res, next){
     var pass = req.body.password;
     var key = req.body.securityKey;
     var shasum = crypto.createHash('sha1');
+    var shakey = crypto.createHash('sha1');
     shasum.update(pass);
+    shakey.update(key);
+    var hexkey = shakey.digest('hex');
     var hex = shasum.digest('hex');
     var date = new Date();
     var userExists = checkUserCache(name);
@@ -110,7 +113,7 @@ router.post('/postuser', function(req, res, next){
         }
         else{
           createUser(name, hex, date, function(){
-            createActiveSession(name, key, function(){
+            createActiveSession(name, hexkey, function(){
               res.json({status: 'OK'});
             });
           });
