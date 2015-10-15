@@ -28,14 +28,13 @@ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min)) + min;
 }
 
-function createCookie(name, value, days, cb) {
+function createCookie(name, value, days, securityKey, cb) {
     var expires = '',
         date = new Date();
     if (days) {
         date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
         expires = '; expires=' + date.toGMTString();
     }
-    var securityKey = getRandomInt(12345723691085,9245788002198778345);
     document.cookie = name + '=' + value +','+ securityKey + expires + '; path=/';
 }
 
@@ -47,16 +46,17 @@ function openHome(){
 UserClient.prototype = {
 
     post : function (uname, password){
+        var securityKey = getRandomInt(12345723691085,9245788002198778345);
         $.ajax({
             type        : 'POST',
             url         : '/users/postuser',
-            data        : {'uname' : uname, 'password' : password},
+            data        : {'uname' : uname, 'password' : password, 'securityKey': securityKey},
             dataType    : 'json'
         }).done(function (data) {
             console.log('Post status: ' + data.status);
             if(data.status === 'OK') {
                 var url = 'http://localhost:3000';
-                createCookie(url, uname, 1, openHome());
+                createCookie(url, uname, 1, securityKey, openHome());
             }
             else{
                 alert("User Is Already Taken!");

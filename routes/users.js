@@ -52,6 +52,19 @@ function checkUserCache(name){
   return 0;
 }
 
+function createActiveSession(name, session, cb){
+  var client = new pg.Client(conString);
+  client.connect();
+  var query = client.query("INSERT INTO SESSIONS VALUES((SELECT id FROM USERINFO WHERE uname=$1), $2)", [name, session]);
+  query.on('error', function(error){
+    console.log("GOT A QUERY ERROR on createActiveSession\n " + error);
+  });
+  query.on("end", function(){
+    client.end();
+    cb();
+  });
+}
+
 function addToCache(name, hex) {
   if (Users.length < 10) {
     Users.push(new User(name, hex));
@@ -78,6 +91,7 @@ router.post('/postuser', function(req, res, next){
   if(req.secure) {
     var name = req.body.uname;
     var pass = req.body.password;
+    var key = req.body.securityKey;
     var shasum = crypto.createHash('sha1');
     shasum.update(pass);
     var hex = shasum.digest('hex');
@@ -96,7 +110,9 @@ router.post('/postuser', function(req, res, next){
         }
         else{
           createUser(name, hex, date, function(){
-            res.json({status: 'OK'});
+            createActiveSession(name, key, function(){
+              res.json({status: 'OK'});
+            });
           });
         }
       });

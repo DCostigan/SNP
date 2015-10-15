@@ -162,7 +162,8 @@ router.post('/postupdates', function(req, res, next) {
         console.log(name + ' ' +  session + "\n");
 
         //validateSession();
-        
+
+
         retrieveFriends(name, function(result){
             console.log("Friends: " + result.length);
             friends.splice(0, friends.length);
