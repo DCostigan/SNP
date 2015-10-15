@@ -94,6 +94,54 @@ function sendInviteToUser(sname, rname, cb){
     });
 }
 
+function retrieveFriends(name, cb){
+    var client = new pg.Client(conString);
+    client.connect();
+    var query = client.query("SELECT u1.uname as fname, u2.uname as fname2, fid, fid2 FROM FRIENDS, USERINFO u1, USERINFO u2 WHERE ((u1.id = FRIENDS.fid AND u2.id = FRIENDS.fid2) OR (u2.id = FRIENDS.fid AND u1.id = FRIENDS.fid2)) AND u1.uname = $1", [name]);
+    query.on('error', function(error){
+        console.log("GOT A QUERY ERROR on retrieveFriends\n " + error);
+    });
+    query.on("row", function(row, result){
+        result.addRow(row);
+    });
+    query.on("end", function(result){
+        client.end();
+        cb(result.rows);
+    });
+}
+
+function retrieveSentInvites(name, cb){
+    var client = new pg.Client(conString);
+    client.connect();
+    var query = client.query("SELECT u1.uname AS sname, u2.uname AS rname, sid, rid FROM INVITES, USERINFO u1, USERINFO u2 WHERE u1.id = INVITES.sid AND u2.id = INVITES.rid AND u1.uname = $1", [name]);
+    query.on('error', function(error){
+        console.log("GOT A QUERY ERROR on retrieveSentInvites\n " + error);
+    });
+    query.on("row", function(row, result){
+        result.addRow(row);
+    });
+    query.on("end", function(result){
+        client.end();
+        cb(result.rows);
+    });
+}
+
+function retrieveReceivedInvites(name, cb){
+    var client = new pg.Client(conString);
+    client.connect();
+    var query = client.query("SELECT u1.uname AS sname, u2.uname AS rname, sid, rid FROM INVITES, USERINFO u1, USERINFO u2 WHERE u1.id = INVITES.sid AND u2.id = INVITES.rid AND u2.uname = $1", [name]);
+    query.on('error', function(error){
+        console.log("GOT A QUERY ERROR on retrieveReceivedInvites\n " + error);
+    });
+    query.on("row", function(row, result){
+        result.addRow(row);
+    });
+    query.on("end", function(result){
+        client.end();
+        cb(result.rows);
+    });
+}
+
 /* GET home page. */
 router.get('/', function(req, res, next) {
     var that = '/';
@@ -111,31 +159,43 @@ router.post('/postupdates', function(req, res, next) {
         console.log('Entering Post Updates!\n');
         var name = req.body.uname;
         var session = req.body.session;
-        console.log(name + session + "\n");
+        console.log(name + ' ' +  session + "\n");
 
-        //GET FRIENDS FOR NAME
-        retreiveFriends(name, function(){
-            retreiveInvites(name, function(result){
-                friends.splice(0, friends.length);
+        //validateSession();
+        
+        retrieveFriends(name, function(result){
+            console.log("Friends: " + result.length);
+            friends.splice(0, friends.length);
+            if(result.length > 0){
+                for(var i = 0;i<result.length;i++){
+                    friends.push(new friend(result[i].fname, result[i].fname2));
+                }
+            }
+            retrieveSentInvites(name, function(result){
+                console.log("Sent Invites: "+ result.length);
                 invites.splice(0, invites.length);
-
-                if(result.length > 1){
+                if(result.length > 0){
                     for(var i = 0;i<result.length;i++){
-                        
+                        invites.push(new invite(result[i].sname, result[i].rname, "sent"));
                     }
                 }
-                // IF FOUND PUSH TO CACHE ARRAY
-                friends.push(new friend(name, "friend@test.com"));
-                invites.push(new invite(name, "invite@test.com", "sent"));
-                invites.push(new invite(name, "invite@test.com", "received"));
+                retrieveReceivedInvites(name, function(result){
+                    console.log("Recieved Invites: " + result.length);
+                    // IF FOUND PUSH TO CACHE ARRAY
+                    if(result.length > 0){
+                        for(var i = 0;i<result.length;i++){
+                            invites.push(new invite(result[i].sname, result[i].rname, "received"));
+                        }
+                    }
 
-                var lastFriend = parseInt(req.body.lastFriend, 10);
-                var lastInvite = parseInt(req.body.lastInvitation, 10);
+                    var lastFriend = parseInt(req.body.lastFriend, 10);
+                    var lastInvite = parseInt(req.body.lastInvitation, 10);
 
-                var restFriend = friends.slice(lastFriend, friends.length);
-                var restInvite = invites.slice(lastInvite, invites.length);
-                var fullJSON = restFriend.concat(restInvite);
-                res.json(fullJSON);
+                    var restFriend = friends.slice(lastFriend, friends.length);
+                    var restInvite = invites.slice(lastInvite, invites.length);
+                    var fullJSON = restFriend.concat(restInvite);
+                    res.json(fullJSON);
+                });
             });
         });
     }

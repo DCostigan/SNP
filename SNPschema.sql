@@ -23,7 +23,7 @@ CREATE TABLE SESSIONS
 CREATE TABLE INVITES
 (
 	sid int references USERINFO(id),
-	rid int references USERINFO(id)
+	rid int references USERINFO(id),
 );
 
 CREATE TABLE FRIENDS

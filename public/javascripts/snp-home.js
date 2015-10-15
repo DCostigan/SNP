@@ -9,7 +9,6 @@ function PostButton(config){
 PostButton.prototype = {
     createListener : function (type, cb) {
         var that = this;
-        console.log(this.view);
         this.view.on(type, function (event) {
             cb.call(that, event);
         });
@@ -326,7 +325,6 @@ document.addEventListener('DOMContentLoaded', function () {
             openIndex();
             return;
         }
-        console.log(this);
         console.log("Hit addButton!\n");
         var text = this.input.val();
         console.log("AddButton Text: " + text + "\n");
