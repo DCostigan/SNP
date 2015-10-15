@@ -72,6 +72,13 @@ HomeClient.prototype = {
             data: { 'uname' : uname, 'session': session, lastFriend: that.friends.length, lastInvitation: that.invitations.length},
             dataType: 'json'
         }).done(function (data) {
+            if(data.status === 'INVALID'){
+                openIndex();
+                var url = 'http://localhost:3000';
+                //needs to delete session from db
+                eraseCookie(url);
+                return;
+            }
             console.log('Check rcvd friends & invitations: ' + JSON.stringify(data));
 
             var fullJSONarray = data;

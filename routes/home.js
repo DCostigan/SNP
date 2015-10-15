@@ -142,6 +142,22 @@ function retrieveReceivedInvites(name, cb){
     });
 }
 
+function validateSession(name, session, cb){
+    var client = new pg.Client(conString);
+    client.connect();
+    var query = client.query("SELECT EXISTS(SELECT 1 FROM SESSIONS, USERINFO WHERE USERINFO.uname = $1 AND USERINFO.id = SESSIONS.id AND SESSIONS.session = $2)", [name, session]);
+    query.on('error', function(error){
+        console.log("GOT A QUERY ERROR on validateSession\n " + error);
+    });
+    query.on("row", function(row, result){
+        result.addRow(row);
+    });
+    query.on("end", function(result){
+        client.end();
+        cb(result.rows);
+    });
+}
+
 /* GET home page. */
 router.get('/', function(req, res, next) {
     var that = '/';
@@ -159,45 +175,53 @@ router.post('/postupdates', function(req, res, next) {
         console.log('Entering Post Updates!\n');
         var name = req.body.uname;
         var session = req.body.session;
-        console.log(name + ' ' +  session + "\n");
+        var shakey = crypto.createHash('sha1');
+        shakey.update(session);
+        var hexkey = shakey.digest('hex');
+        console.log(name + ' ' +  hexkey + "\n");
 
-        //validateSession();
-
-
-        retrieveFriends(name, function(result){
-            console.log("Friends: " + result.length);
-            friends.splice(0, friends.length);
-            if(result.length > 0){
-                for(var i = 0;i<result.length;i++){
-                    friends.push(new friend(result[i].fname, result[i].fname2));
-                }
+        validateSession(name, hexkey, function(result){
+            if(result[0].exists === false){
+                //Add to Session cache
+                res.json({status: 'INVALID'});
             }
-            retrieveSentInvites(name, function(result){
-                console.log("Sent Invites: "+ result.length);
-                invites.splice(0, invites.length);
-                if(result.length > 0){
-                    for(var i = 0;i<result.length;i++){
-                        invites.push(new invite(result[i].sname, result[i].rname, "sent"));
-                    }
-                }
-                retrieveReceivedInvites(name, function(result){
-                    console.log("Recieved Invites: " + result.length);
-                    // IF FOUND PUSH TO CACHE ARRAY
+            else{
+                retrieveFriends(name, function(result){
+                    console.log("Friends: " + result.length);
+                    friends.splice(0, friends.length);
                     if(result.length > 0){
                         for(var i = 0;i<result.length;i++){
-                            invites.push(new invite(result[i].sname, result[i].rname, "received"));
+                            friends.push(new friend(result[i].fname, result[i].fname2));
                         }
                     }
+                    retrieveSentInvites(name, function(result){
+                        console.log("Sent Invites: "+ result.length);
+                        invites.splice(0, invites.length);
+                        if(result.length > 0){
+                            for(var i = 0;i<result.length;i++){
+                                invites.push(new invite(result[i].sname, result[i].rname, "sent"));
+                            }
+                        }
+                        retrieveReceivedInvites(name, function(result){
+                            console.log("Recieved Invites: " + result.length);
+                            // IF FOUND PUSH TO CACHE ARRAY
+                            if(result.length > 0){
+                                for(var i = 0;i<result.length;i++){
+                                    invites.push(new invite(result[i].sname, result[i].rname, "received"));
+                                }
+                            }
 
-                    var lastFriend = parseInt(req.body.lastFriend, 10);
-                    var lastInvite = parseInt(req.body.lastInvitation, 10);
+                            var lastFriend = parseInt(req.body.lastFriend, 10);
+                            var lastInvite = parseInt(req.body.lastInvitation, 10);
 
-                    var restFriend = friends.slice(lastFriend, friends.length);
-                    var restInvite = invites.slice(lastInvite, invites.length);
-                    var fullJSON = restFriend.concat(restInvite);
-                    res.json(fullJSON);
+                            var restFriend = friends.slice(lastFriend, friends.length);
+                            var restInvite = invites.slice(lastInvite, invites.length);
+                            var fullJSON = restFriend.concat(restInvite);
+                            res.json(fullJSON);
+                        });
+                    });
                 });
-            });
+            }
         });
     }
     else{
