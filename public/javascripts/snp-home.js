@@ -253,13 +253,13 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log("Entered DOMContentLoaded\n");
     var url = "http://localhost:3000";
     var cookie = readCookie(url);
-    var cookieUser = cookie.substring(0, cookie.indexOf(','));
-    var cookieSession = cookie.substring(cookie.indexOf(',')+1, cookie.length);
-
     if(cookie === null){
         openIndex();
         return;
     }
+    var cookieUser = cookie.substring(0, cookie.indexOf(','));
+    var cookieSession = cookie.substring(cookie.indexOf(',')+1, cookie.length);
+
     var username = $('#user-name');
     var addUser = $('#add-user');
     var friendsList = $('#friends-list');

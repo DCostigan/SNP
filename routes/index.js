@@ -3,6 +3,7 @@ var router = express.Router();
 var pg = require('pg');
 var crypto = require("crypto");
 var conString = 'postgres://postgres:Redbird777@localhost:5432/snp';
+var io = require('socket.io');
 
 function User(name, pass) {
   this.name = name;

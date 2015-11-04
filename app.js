@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 var https = require('https');
 var fs = require('fs');
 var http = require('http');
+var io = require('socket.io');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -66,6 +67,62 @@ var options = {
   cert: fs.readFileSync('./agent2-cert.pem')
 };
 
-https.createServer(options, app).listen(3030);
+var server = https.createServer(options, app).listen(3030);
+var ios = io.listen(server);
+
+function readCookie(name) {
+  var cookies = document.cookie.split(';'),
+      length = cookies.length,
+      i,
+      cookie,
+      nameEQ = name + '=';
+  for (i = 0; i < length; i += 1) {
+    cookie = cookies[i];
+    while (cookie.charAt(0) === ' ') {
+      cookie = cookie.substring(1, cookie.length);
+    }
+    if (cookie.indexOf(nameEQ) === 0) {
+      return cookie.substring(nameEQ.length, cookie.length);
+    }
+  }
+  return null;
+}
+
+var pg = require('pg');
+var conString = 'postgres://postgres:Redbird777@localhost:5432/snp';
+
+function getUsersFriendKeys(name, cb){
+  var client = new pg.Client(conString);
+  client.connect();
+  var query = client.query("SELECT * FROM Sessions");
+  query.on('error', function(error){
+    console.log("GOT A QUERY ERROR on getUsersFriendKeys\n " + error);
+  });
+  query.on("row", function(row, result){
+    result.addRow(row);
+  });
+  query.on("end", function(result){
+    client.end();
+    cb(result.rows);
+  });
+}
+
+
+ios.sockets.on('connection', function(socket) {
+  console.log("ESTABLSIHING CONNECTION\n");
+  socket.emit('hello');
+  socket.on('response', function (data) {
+    console.log("CREATING RESPONSE\n");
+    if(data.user !== '') {
+      getUsersFriendKeys(data.user, function (result) {
+        socket.emit('info', {'data': result});
+      });
+    }
+    else{
+      socket.emit('info', {'data': null});
+    }
+  });
+});
+
 
 module.exports = app;

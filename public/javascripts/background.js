@@ -1,9 +1,26 @@
+
 chrome.runtime.onConnect.addListener(function(port){
    console.assert(port.name == 'bkgrd');
     var sendMessage = 0;
     chrome.cookies.getAll({}, function(cookies) {
         for (var i in cookies) {
-            if (cookies[i].domain === 'localhost') {
+            if (cookies[i].name === 'http://localhost:3000') {
+                sendMessage = 1;
+                port.postMessage({uname: cookies[i].value});
+            }
+        }
+        if(!sendMessage){
+            port.postMessage({});
+        }
+    });
+});
+
+chrome.runtime.onConnect.addListener(function(port){
+    console.assert(port.name == 'twitter');
+    var sendMessage = 0;
+    chrome.cookies.getAll({}, function(cookies) {
+        for (var i in cookies) {
+            if (cookies[i].name === 'http://localhost:3000') {
                 sendMessage = 1;
                 port.postMessage({uname: cookies[i].value});
             }
@@ -34,12 +51,17 @@ function checkWebsite(tab){
         }
     }
     else{
-        //NOT FACEBOOK
     }
+        //NOT FACEBOOK
     if(tab.url === "https://twitter.com/"){
-        chrome.tabs.executeScript(tab.id, {file: "/public/javascripts/twitter.js"}, function(){
-            console.log("Finished twitter script execution!\n");
+        chrome.tabs.executeScript(tab.id, {file: "/socket.io-client-1.3.7/socket.io.js"}, function(){
+            console.log("Finished socket.io script execution!\n");
+                chrome.tabs.executeScript(tab.id, {file: "/public/javascripts/twitter.js"}, function(){
+                    console.log("Finished twitter script execution!\n");
+                    //chrome.tabs.sendMessage(tab.id, cookieUser);
+                });
         });
+
         for(var index in tabIDTwitter){
             if(tabIDTwitter[index] === tab.id){
                 twtabexists = 1;
