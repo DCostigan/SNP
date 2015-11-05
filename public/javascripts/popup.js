@@ -42,7 +42,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     //IF THERE ARE COOKIES
     var port = chrome.runtime.connect({name: "bkgrd"});
+    var messageCount = 0;
     port.onMessage.addListener(function(msg){
+        messageCount++;
         if(msg.uname){
             console.log('USER SESSION: ' + msg.uname);
             activeSession = 1;
@@ -51,7 +53,8 @@ document.addEventListener('DOMContentLoaded', function() {
             cookieUser = msg.uname;
             cookieUser = cookieUser.substring(0, cookieUser.indexOf(','));
             var text = document.createTextNode(cookieUser);
-            div.appendChild(text);
+            if(messageCount === 1)
+                div.appendChild(text);
         }
         else{
             console.log('NO SESSION!');
