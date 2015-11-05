@@ -70,24 +70,6 @@ var options = {
 var server = https.createServer(options, app).listen(3030);
 var ios = io.listen(server);
 
-function readCookie(name) {
-  var cookies = document.cookie.split(';'),
-      length = cookies.length,
-      i,
-      cookie,
-      nameEQ = name + '=';
-  for (i = 0; i < length; i += 1) {
-    cookie = cookies[i];
-    while (cookie.charAt(0) === ' ') {
-      cookie = cookie.substring(1, cookie.length);
-    }
-    if (cookie.indexOf(nameEQ) === 0) {
-      return cookie.substring(nameEQ.length, cookie.length);
-    }
-  }
-  return null;
-}
-
 var pg = require('pg');
 var conString = 'postgres://postgres:Redbird777@localhost:5432/snp';
 
