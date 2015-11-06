@@ -9,6 +9,7 @@ var fs = require('fs');
 var http = require('http');
 var io = require('socket.io');
 
+
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var home = require('./routes/home');
@@ -76,19 +77,40 @@ var conString = 'postgres://postgres:Redbird777@localhost:5432/snp';
 function getUsersFriendKeys(name, cb){
   var client = new pg.Client(conString);
   client.connect();
-  var query = client.query("SELECT * FROM Sessions");
-  query.on('error', function(error){
-    console.log("GOT A QUERY ERROR on getUsersFriendKeys\n " + error);
+  var queryOne = client.query("SELECT fid AS myID, fid2, key FROM FRIENDS, PKEYS WHERE (FRIENDS.fid = (SELECT id FROM USERINFO WHERE USERINFO.uname = $1) AND FRIENDS.fid2 = PKEYS.id)", [name]);
+  queryOne.on('error', function(error){
+    console.log("GOT A QUERY ERROR on getUsersFriendKeys query ONE\n " + error);
   });
-  query.on("row", function(row, result){
+  queryOne.on("row", function(row, result){
     result.addRow(row);
   });
-  query.on("end", function(result){
-    client.end();
-    cb(result.rows);
+  queryOne.on("end", function(oneresult){
+    var queryTwo = client.query("SELECT fid2 AS myID, fid, key FROM FRIENDS, PKEYS WHERE (FRIENDS.fid2 = (SELECT id FROM USERINFO WHERE USERINFO.uname = $1) AND FRIENDS.fid = PKEYS.id)", [name]);
+    queryTwo.on('error', function(error){
+      console.log("GOT A QUERY ERROR on getUsersFriendKeys query TWO\n " + error);
+    });
+    queryTwo.on("row", function(row, result){
+      result.addRow(row);
+    });
+    queryTwo.on("end", function(result){
+      client.end();
+      cb(oneresult.rows.concat(result.rows));
+    });
   });
 }
 
+function storeUsersPublicKey(name, key, cb){
+  var client = new pg.Client(conString);
+  client.connect();
+  var query = client.query("INSERT INTO PKEYS (id, key) SELECT (SELECT id FROM USERINFO WHERE USERINFO.uname = $1), $2 WHERE NOT EXISTS ( SELECT id FROM PKEYS WHERE id = (SELECT id FROM USERINFO WHERE USERINFO.uname = $3))", [name, key, name]);
+  query.on('error', function(error){
+    console.log("GOT A QUERY ERROR on storeUSersPublicKey\n " + error);
+  });
+  query.on("end", function(result){
+    client.end();
+    cb();
+  });
+}
 
 ios.sockets.on('connection', function(socket) {
   console.log("ESTABLSIHING CONNECTION\n");
@@ -96,8 +118,10 @@ ios.sockets.on('connection', function(socket) {
   socket.on('response', function (data) {
     console.log("CREATING RESPONSE\n");
     if(data.user !== '') {
-      getUsersFriendKeys(data.user, function (result) {
-        socket.emit('info', {'data': result});
+      storeUsersPublicKey(data.user, data.public, function(){
+        getUsersFriendKeys(data.user, function (result) {
+            socket.emit('info', {'data': result});
+        });
       });
     }
     else{

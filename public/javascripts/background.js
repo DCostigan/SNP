@@ -56,10 +56,12 @@ function checkWebsite(tab){
     if(tab.url === "https://twitter.com/"){
         chrome.tabs.executeScript(tab.id, {file: "/socket.io-client-1.3.7/socket.io.js"}, function(){
             console.log("Finished socket.io script execution!\n");
+            chrome.tabs.executeScript(tab.id, {file: "/public/javascripts/cryptico.min.js"}, function(){
+                console.log("Finished cryptico.min.js script execution!\n");
                 chrome.tabs.executeScript(tab.id, {file: "/public/javascripts/twitter.js"}, function(){
                     console.log("Finished twitter script execution!\n");
-                    //chrome.tabs.sendMessage(tab.id, cookieUser);
                 });
+            });
         });
 
         for(var index in tabIDTwitter){
