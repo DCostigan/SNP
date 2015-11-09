@@ -112,11 +112,25 @@ function storeUsersPublicKey(name, key, cb){
   });
 }
 
+function getUser(id, cb){
+  var client = new pg.Client(conString);
+  client.connect();
+  var query = client.query("SELECT uname FROM USERINFO WHERE USERINFO.id = $1", [id]);
+  query.on('error', function(error){
+    console.log("GOT A QUERY ERROR on getUser\n " + error);
+  });
+  query.on("row", function(row, result){
+    result.addRow(row);
+  });
+  query.on("end", function(result){
+    client.end();
+    cb(result.rows);
+  });
+}
+
 ios.sockets.on('connection', function(socket) {
-  console.log("ESTABLSIHING CONNECTION\n");
   socket.emit('hello');
   socket.on('response', function (data) {
-    console.log("CREATING RESPONSE\n");
     if(data.user !== '') {
       storeUsersPublicKey(data.user, data.public, function(){
         getUsersFriendKeys(data.user, function (result) {
@@ -127,6 +141,11 @@ ios.sockets.on('connection', function(socket) {
     else{
       socket.emit('info', {'data': null});
     }
+  });
+  socket.on('user', function(data){
+    getUser(data.id, function(result){
+      socket.emit('rsa', {'name': result});
+    });
   });
 });
 
