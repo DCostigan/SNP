@@ -34,6 +34,17 @@ chrome.runtime.onConnect.addListener(function(port){
 var tabIDFacebook = [];
 var tabIDTwitter = [];
 
+//chrome.runtime.onMessage.addListener(function(){
+//    console.log("GOT THE MESSAGE\n");
+//    var updateProperties = {'url': 'https://twitter.com', 'active': true};
+//    chrome.tabs.query({'active': true}, function (activeTabs){
+//        var activeTab = activeTabs[0];
+//        chrome.tabs.update(activeTab.id, updateProperties, function(){
+//           console.log("FINISHED UPDATE\n");
+//        });
+//    });
+//});
+
 function checkWebsite(tab){
     var fbtabexists = 0;
     var twtabexists = 0;

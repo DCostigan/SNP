@@ -9,7 +9,6 @@ function PostButton(config){
 PostButton.prototype = {
     createListener : function (type, cb) {
         var that = this;
-        console.log(this.view);
         this.view.on(type, function (event) {
             cb.call(that, event);
         });
@@ -83,7 +82,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     loginButton.createListener('click', function(event){
-       console.log(this);
         var text = this.input.val();
         var injectionProofUsername = text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
         //$('#event-name').prop('readonly', true);
@@ -95,5 +93,24 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         indexc.check(injectionProofUsername, injectionProofPassword);
         return false;
+    });
+
+    var passEnter = document.getElementById("password");
+
+    passEnter.addEventListener('keypress', function(event){
+        var key = event.which || event.keyCode;
+        if(key === 13){
+            var text = username.val();
+            var injectionProofUsername = text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            //$('#event-name').prop('readonly', true);
+            var text2 = password.val();
+            var injectionProofPassword = text2.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            if(injectionProofUsername === '' || injectionProofPassword === ''){
+                alert("Invalid Username And/Or Password!\n");
+                return false;
+            }
+            indexc.check(injectionProofUsername, injectionProofPassword);
+            return false;
+        }
     });
 });

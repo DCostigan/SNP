@@ -2,6 +2,11 @@ console.log("TWITTER CONTENT SCRIPT\n");
 
 var url = "https://localhost:3030";
 
+//function callUpdate(){
+//    console.log("Calling UPDATE\n");
+//    chrome.runtime.sendMessage({type:"update"});
+//}
+
 var socket = io.connect(url, {reconnection: false});
 socket.on('connect_error', function(){
     console.log("GOT AN ERROR FROM SOCKET.IO CONNECTION ATTEMPT\n");
@@ -25,7 +30,7 @@ socket.on('hello', function(){
 
             socket.on("info", function(result){
                 keys = result.data;
-                
+
                 socket.emit('id', {'name':cookieUser});
                 socket.on('name', function(data){
                     var myid = data.id[0].id;
@@ -39,8 +44,11 @@ socket.on('hello', function(){
                         if(header !== 'SNP'){
                             var EncryptedMessage = cryptico.encrypt(postFieldTextInnerText, cookiePublicKey);
                             postFieldText.innerText = 'SNP'+'('+myid+')'+EncryptedMessage.cipher;
-                            //SEND OFF AN ON UPDATE EVENT SO IT LOOKS DECRYPTED
                         }
+                    });
+
+                    postButton[0].addEventListener("click", function(event){
+                        //callUpdate();
                     });
 
                     var stream = document.getElementsByClassName("TweetTextSize  js-tweet-text tweet-text");

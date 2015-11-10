@@ -104,4 +104,28 @@ document.addEventListener('DOMContentLoaded', function () {
         userc.post(injectionProofUsername, injectionProofPassword);
         return false;
     });
+
+    var confPassEnter = document.getElementById("confirm-password");
+
+    confPassEnter.addEventListener('keypress', function(event){
+        var key = event.which || event.keyCode;
+        if(key === 13){
+            var text = username.val();
+            var injectionProofUsername = text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            var text2 = newPassword.val();
+            var text3 = confPassword.val();
+
+            if(text2 !== text3){
+                alert("Passwords do not match!\n");
+                return false;
+            }
+            var injectionProofPassword = text2.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            if(injectionProofUsername === '' || injectionProofPassword === ''){
+                alert("Invalid Username And/Or Password!\n");
+                return false;
+            }
+            userc.post(injectionProofUsername, injectionProofPassword);
+            return false;
+        }
+    });
 });
