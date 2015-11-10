@@ -335,11 +335,9 @@ document.addEventListener('DOMContentLoaded', function () {
         console.log("AddButton Text: " + text + "\n");
         document.getElementById("user-name").value = '';
         var injectionProofUsername = text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-        if(injectionProofUsername === '')
+        if(injectionProofUsername === '' || injectionProofUsername === cookieUser)
             return false;
         homec.check(cookieUser, injectionProofUsername);
         return false;
     });
-
-    var addButtonEnter = document.getElementById("")
 });
