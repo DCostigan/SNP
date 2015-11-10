@@ -53,7 +53,9 @@ function checkWebsite(tab){
     var fbtabexists = 0;
     var twtabexists = 0;
     var regExpTwitter = /https?:\/\/twitter.com\/(.*)$/;
-    if(tab.url === "https://www.facebook.com/"){
+    var regExpFacebook = /https?:\/\/facebook.com\/(.*)$/;
+    //if(tab.url === "https://www.facebook.com/"){
+    if(regExpFacebook.test(tab.url)){
         chrome.tabs.executeScript(tab.id, {file: "/public/javascripts/facebook.js"}, function(){
             console.log("Finished facebook script execution!\n");
         });
