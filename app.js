@@ -128,6 +128,22 @@ function getUser(id, cb){
   });
 }
 
+function getUsername(name, cb){
+  var client = new pg.Client(conString);
+  client.connect();
+  var query = client.query("SELECT id FROM USERINFO WHERE USERINFO.uname = $1", [name]);
+  query.on('error', function(error){
+    console.log("GOT A QUERY ERROR on getUser\n " + error);
+  });
+  query.on("row", function(row, result){
+    result.addRow(row);
+  });
+  query.on("end", function(result){
+    client.end();
+    cb(result.rows);
+  });
+}
+
 ios.sockets.on('connection', function(socket) {
   socket.emit('hello');
   socket.on('response', function (data) {
@@ -146,6 +162,11 @@ ios.sockets.on('connection', function(socket) {
     getUser(data.id, function(result){
       socket.emit('rsa', {'name': result});
     });
+  });
+  socket.on('id', function(data){
+    getUsername(data.name, function(result){
+      socket.emit('name', {'id': result});
+    })
   });
 });
 
