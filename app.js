@@ -168,6 +168,9 @@ ios.sockets.on('connection', function(socket) {
       socket.emit('name', {'id': result});
     })
   });
+  socket.on('error', function(error){
+    console.log("GOT AN ERROR FROM app.js" + error);
+  });
 });
 
 

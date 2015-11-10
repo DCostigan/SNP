@@ -2,10 +2,10 @@ console.log("TWITTER CONTENT SCRIPT\n");
 
 var url = "https://localhost:3030";
 
-//function callUpdate(){
-//    console.log("Calling UPDATE\n");
-//    chrome.runtime.sendMessage({type:"update"});
-//}
+function callUpdate(){
+    console.log("Calling UPDATE\n");
+    chrome.runtime.sendMessage({type:"update"});
+}
 
 var socket = io.connect(url, {reconnection: false});
 socket.on('connect_error', function(){
@@ -48,7 +48,7 @@ socket.on('hello', function(){
                     });
 
                     postButton[0].addEventListener("click", function(event){
-                        //callUpdate();
+                        callUpdate();
                     });
 
                     var stream = document.getElementsByClassName("TweetTextSize  js-tweet-text tweet-text");

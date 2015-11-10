@@ -34,20 +34,25 @@ chrome.runtime.onConnect.addListener(function(port){
 var tabIDFacebook = [];
 var tabIDTwitter = [];
 
-//chrome.runtime.onMessage.addListener(function(){
-//    console.log("GOT THE MESSAGE\n");
-//    var updateProperties = {'url': 'https://twitter.com', 'active': true};
-//    chrome.tabs.query({'active': true}, function (activeTabs){
-//        var activeTab = activeTabs[0];
-//        chrome.tabs.update(activeTab.id, updateProperties, function(){
-//           console.log("FINISHED UPDATE\n");
-//        });
-//    });
-//});
+chrome.runtime.onMessage.addListener(function(){
+    console.log("GOT THE MESSAGE\n");
+    var updateProperties = {'active': false};
+    var updateProperties2 = {'active': true};
+    chrome.tabs.query({'active': true}, function (activeTabs){
+        var activeTab = activeTabs[0];
+        chrome.tabs.update(activeTab.id, updateProperties, function(){
+           console.log("FINISHED UPDATE ONE\n");
+            chrome.tabs.update(activeTab.id, updateProperties2, function(){
+               console.log("FINISHED UPDATE TWO\n");
+            });
+        });
+    });
+});
 
 function checkWebsite(tab){
     var fbtabexists = 0;
     var twtabexists = 0;
+    var regExpTwitter = /https?:\/\/twitter.com\/(.*)$/;
     if(tab.url === "https://www.facebook.com/"){
         chrome.tabs.executeScript(tab.id, {file: "/public/javascripts/facebook.js"}, function(){
             console.log("Finished facebook script execution!\n");
@@ -64,7 +69,8 @@ function checkWebsite(tab){
     else{
     }
         //NOT FACEBOOK
-    if(tab.url === "https://twitter.com/"){
+    //if(tab.url === "https://twitter.com/"){
+    if(regExpTwitter.test(tab.url)){
         chrome.tabs.executeScript(tab.id, {file: "/socket.io-client-1.3.7/socket.io.js"}, function(){
             console.log("Finished socket.io script execution!\n");
             chrome.tabs.executeScript(tab.id, {file: "/cryptico-master/cryptico.min.js"}, function(){
