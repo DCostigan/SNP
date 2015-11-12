@@ -2,9 +2,22 @@ console.log("TWITTER CONTENT SCRIPT\n");
 
 var url = "https://localhost:3030";
 
+//var mouseEnterFlag = false;
+var mouseClickFlag = false;
+
 function callUpdate(){
     console.log("Calling UPDATE\n");
     chrome.runtime.sendMessage({type:"update"});
+}
+
+function deleteClick(msgNum){
+    return function(){
+        if(!mouseClickFlag) {
+            console.log("GOT INTO DELETE CLICK with msgNUM" + msgNum + "\n");
+            mouseClickFlag = true;
+            chrome.runtime.sendMessage({type: "delete"});
+        }
+    }
 }
 
 var socket = io.connect(url, {reconnection: false});
@@ -35,19 +48,42 @@ socket.on('hello', function(){
                 socket.on('name', function(data){
                     var myid = data.id[0].id;
                     var postButton = document.getElementsByClassName("btn primary-btn tweet-action tweet-btn js-tweet-btn");
+                    var deleteButton = document.getElementsByClassName("js-actionDelete");
+                    var cancelButton = document.getElementsByClassName("btn cancel-action js-close");
 
-                    postButton[0].addEventListener("mouseover", function(event){
-                        var postField = document.getElementById("tweet-box-home-timeline");
-                        var postFieldText = postField.childNodes[0];
-                        var postFieldTextInnerText = postFieldText.innerText;
-                        var header = postFieldTextInnerText.substring(0,3);
-                        if(header !== 'SNP'){
-                            var EncryptedMessage = cryptico.encrypt(postFieldTextInnerText, cookiePublicKey);
-                            postFieldText.innerText = 'SNP'+'('+myid+')'+EncryptedMessage.cipher;
-                        }
+                    cancelButton[0].addEventListener('click', function(event){
+                       console.log("CANCEL BUTTON PRESSED!\n");
+                        mouseClickFlag = false;
+                    });
+
+                    for(var i = 0; i<deleteButton.length;i++){
+                            deleteButton[i].addEventListener("click", deleteClick(i));
+                    }
+
+                    postButton[0].addEventListener("mouseenter", function(event){
+                        //if(!mouseEnterFlag){
+                            console.log("MOUSE ENTER!\n");
+                            //mouseEnterFlag = true;
+                            var postField = document.getElementById("tweet-box-home-timeline");
+                            var postFieldText = postField.childNodes[0];
+                            var postFieldTextInnerText = postFieldText.innerText;
+                            var header = postFieldTextInnerText.substring(0,3);
+                            if(header !== 'SNP'){
+                                var EncryptedMessage = cryptico.encrypt(postFieldTextInnerText, cookiePublicKey);
+                                var messageToCompress = 'SNP'+'('+myid+')'+EncryptedMessage.cipher;
+                                //CAN WITHSTAND 16 characters without compression
+                                //var compressData = atob(messageToCompress);
+                                //var compressData = messageToCompress.split('').map(function(e){
+                                //    console.log("WORKING ON COMPRESSING DATA\n");
+                                //    return e.charCodeAt(0);
+                                //});
+                                postFieldText.innerText = messageToCompress;
+                            }
+                        //}
                     });
 
                     postButton[0].addEventListener("click", function(event){
+                        //mouseEnterFlag = false;
                         callUpdate();
                     });
 

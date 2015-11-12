@@ -34,19 +34,36 @@ chrome.runtime.onConnect.addListener(function(port){
 var tabIDFacebook = [];
 var tabIDTwitter = [];
 
-chrome.runtime.onMessage.addListener(function(){
-    console.log("GOT THE MESSAGE\n");
-    var updateProperties = {'active': false};
-    var updateProperties2 = {'active': true};
-    chrome.tabs.query({'active': true}, function (activeTabs){
-        var activeTab = activeTabs[0];
-        chrome.tabs.update(activeTab.id, updateProperties, function(){
-           console.log("FINISHED UPDATE ONE\n");
-            chrome.tabs.update(activeTab.id, updateProperties2, function(){
-               console.log("FINISHED UPDATE TWO\n");
+chrome.runtime.onMessage.addListener(function(message){
+    console.log(message.type);
+    if(message.type === 'update') {
+        console.log("GOT THE MESSAGE\n");
+        var updateProperties = {'active': false};
+        var updateProperties2 = {'active': true};
+        chrome.tabs.query({'active': true}, function (activeTabs) {
+            var activeTab = activeTabs[0];
+            chrome.tabs.update(activeTab.id, updateProperties, function () {
+                console.log("FINISHED UPDATE ONE\n");
+                chrome.tabs.update(activeTab.id, updateProperties2, function () {
+                    console.log("FINISHED UPDATE TWO\n");
+                });
             });
         });
-    });
+    }
+    if(message.type === 'delete'){
+        chrome.tabs.query({'active': true}, function (activeTabs) {
+            var activeTab = activeTabs[0];
+            chrome.tabs.executeScript(activeTab.id, {file: "/socket.io-client-1.3.7/socket.io.js"}, function() {
+                console.log("Finished socket.io script execution!\n");
+                chrome.tabs.executeScript(activeTab.id, {file: "/cryptico-master/cryptico.min.js"}, function () {
+                    console.log("Finished cryptico.min.js script execution in DELETE!\n");
+                    chrome.tabs.executeScript(activeTab.id, {file: "/public/javascripts/twitter.js"}, function () {
+                        console.log("Finished twitter script execution in DELETE!\n");
+                    });
+                });
+            });
+        });
+    }
 });
 
 function checkWebsite(tab){
@@ -77,9 +94,9 @@ function checkWebsite(tab){
             console.log("Finished socket.io script execution!\n");
             chrome.tabs.executeScript(tab.id, {file: "/cryptico-master/cryptico.min.js"}, function(){
                 console.log("Finished cryptico.min.js script execution!\n");
-                chrome.tabs.executeScript(tab.id, {file: "/public/javascripts/twitter.js"}, function(){
-                    console.log("Finished twitter script execution!\n");
-                });
+                    chrome.tabs.executeScript(tab.id, {file: "/public/javascripts/twitter.js"}, function () {
+                        console.log("Finished twitter script execution!\n");
+                    });
             });
         });
 
