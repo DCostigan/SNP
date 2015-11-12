@@ -40,11 +40,11 @@ chrome.runtime.onMessage.addListener(function(message){
         chrome.tabs.query({'active': true}, function (activeTabs) {
             var activeTab = activeTabs[0];
             chrome.tabs.executeScript(activeTab.id, {file: "/socket.io-client-1.3.7/socket.io.js"}, function() {
-                console.log("Finished socket.io script execution!\n");
+                console.log("Finished socket.io script execution in UPDATE!\n");
                 chrome.tabs.executeScript(activeTab.id, {file: "/cryptico-master/cryptico.min.js"}, function () {
-                    console.log("Finished cryptico.min.js script execution in DELETE!\n");
+                    console.log("Finished cryptico.min.js script execution in UPDATE!\n");
                     chrome.tabs.executeScript(activeTab.id, {file: "/public/javascripts/twitter.js"}, function () {
-                        console.log("Finished twitter script execution in DELETE!\n");
+                        console.log("Finished twitter script execution in UPDATE!\n");
                     });
                 });
             });
@@ -54,7 +54,7 @@ chrome.runtime.onMessage.addListener(function(message){
         chrome.tabs.query({'active': true}, function (activeTabs) {
             var activeTab = activeTabs[0];
             chrome.tabs.executeScript(activeTab.id, {file: "/socket.io-client-1.3.7/socket.io.js"}, function() {
-                console.log("Finished socket.io script execution!\n");
+                console.log("Finished socket.io script execution in DELETE!\n");
                 chrome.tabs.executeScript(activeTab.id, {file: "/cryptico-master/cryptico.min.js"}, function () {
                     console.log("Finished cryptico.min.js script execution in DELETE!\n");
                     chrome.tabs.executeScript(activeTab.id, {file: "/public/javascripts/twitter.js"}, function () {
