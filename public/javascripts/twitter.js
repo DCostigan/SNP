@@ -3,18 +3,14 @@ console.log("TWITTER CONTENT SCRIPT\n");
 var url = "https://localhost:3030";
 
 //var mouseEnterFlag = false;
-var mouseClickFlag = false;
-
-function callUpdate(){
-    console.log("Calling UPDATE\n");
-    chrome.runtime.sendMessage({type:"update"});
-}
+var mouseClickDelete = false;
+var mouseClickUpdate = false;
 
 function deleteClick(msgNum){
     return function(){
-        if(!mouseClickFlag) {
+        if(!mouseClickDelete) {
             console.log("GOT INTO DELETE CLICK with msgNUM" + msgNum + "\n");
-            mouseClickFlag = true;
+            mouseClickDelete = true;
             chrome.runtime.sendMessage({type: "delete"});
         }
     }
@@ -83,8 +79,10 @@ socket.on('hello', function(){
                     });
 
                     postButton[0].addEventListener("click", function(event){
-                        //mouseEnterFlag = false;
-                        callUpdate();
+                        if(!mouseClickUpdate) {
+                            mouseClickUpdate = true;
+                            chrome.runtime.sendMessage({type: "update"});
+                        }
                     });
 
                     var stream = document.getElementsByClassName("TweetTextSize  js-tweet-text tweet-text");
