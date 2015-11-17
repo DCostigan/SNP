@@ -67,13 +67,13 @@ socket.on('hello', function(){
                             if(header !== 'SNP'){
                                 var EncryptedMessage = cryptico.encrypt(postFieldTextInnerText, cookiePublicKey);
                                 var messageToCompress = 'SNP'+'('+myid+')'+EncryptedMessage.cipher;
+
+                                //var messageToCompress = 'SNP'+'('+myid+')'+JSON.stringify(EncryptedMessage);
                                 //CAN WITHSTAND 16 characters without compression
-                                //var compressData = atob(messageToCompress);
-                                //var compressData = messageToCompress.split('').map(function(e){
-                                //    console.log("WORKING ON COMPRESSING DATA\n");
-                                //    return e.charCodeAt(0);
-                                //});
                                 postFieldText.innerText = messageToCompress;
+                                //var encrypted = messageToCompress.substring(messageToCompress.indexOf(')')+1, messageToCompress.length);
+                                //var result = cryptico.decrypt(test2.cipher, cookieRSAKey);
+                                //console.log(result.plaintext);
                             }
                         //}
                     });

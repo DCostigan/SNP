@@ -31,6 +31,23 @@ chrome.runtime.onConnect.addListener(function(port){
     });
 });
 
+chrome.runtime.onConnect.addListener(function(port){
+    console.assert(port.name == 'facebook');
+    var sendMessage = 0;
+    chrome.cookies.getAll({}, function(cookies) {
+        for (var i in cookies) {
+            if (cookies[i].name === 'http://localhost:3000') {
+                sendMessage = 1;
+                port.postMessage({uname: cookies[i].value});
+            }
+        }
+        if(!sendMessage){
+            port.postMessage({});
+        }
+    });
+});
+
+
 var tabIDFacebook = [];
 var tabIDTwitter = [];
 
@@ -45,6 +62,20 @@ chrome.runtime.onMessage.addListener(function(message){
                     console.log("Finished cryptico.min.js script execution in UPDATE!\n");
                     chrome.tabs.executeScript(activeTab.id, {file: "/public/javascripts/twitter.js"}, function () {
                         console.log("Finished twitter script execution in UPDATE!\n");
+                    });
+                });
+            });
+        });
+    }
+    if(message.type === 'updatef') {
+        chrome.tabs.query({'active': true}, function (activeTabs) {
+            var activeTab = activeTabs[0];
+            chrome.tabs.executeScript(activeTab.id, {file: "/socket.io-client-1.3.7/socket.io.js"}, function() {
+                console.log("Finished socket.io script execution in UPDATE!\n");
+                chrome.tabs.executeScript(activeTab.id, {file: "/cryptico-master/cryptico.min.js"}, function () {
+                    console.log("Finished cryptico.min.js script execution in UPDATE!\n");
+                    chrome.tabs.executeScript(activeTab.id, {file: "/public/javascripts/facebook.js"}, function () {
+                        console.log("Finished facebook script execution in UPDATE!\n");
                     });
                 });
             });
@@ -70,11 +101,20 @@ function checkWebsite(tab){
     var fbtabexists = 0;
     var twtabexists = 0;
     var regExpTwitter = /https?:\/\/twitter.com\/(.*)$/;
-    var regExpFacebook = /https?:\/\/facebook.com\/(.*)$/;
+    var regExpFacebook = /https?:\/\/www.facebook.com\/(.*)$/;
     //if(tab.url === "https://www.facebook.com/"){
     if(regExpFacebook.test(tab.url)){
-        chrome.tabs.executeScript(tab.id, {file: "/public/javascripts/facebook.js"}, function(){
-            console.log("Finished facebook script execution!\n");
+        chrome.tabs.executeScript(tab.id, {file: "/socket.io-client-1.3.7/socket.io.js"}, function(){
+            console.log("Finished socket.io script execution!\n");
+            chrome.tabs.executeScript(tab.id, {file: "/cryptico-master/cryptico.min.js"}, function(){
+                console.log("Finished cryptico.min.js script execution!\n");
+                chrome.tabs.executeScript(tab.id, {file: "/public/javascripts/jquery-1.11.2.min.js"}, function() {
+                    console.log("Finished jquery.min.js script execution!\n");
+                    chrome.tabs.executeScript(tab.id, {file: "/public/javascripts/facebook.js"}, function () {
+                        console.log("Finished facebook script execution!\n");
+                    });
+                });
+            });
         });
         for(var index in tabIDFacebook){
             if(tabIDFacebook[index] === tab.id){
@@ -94,9 +134,12 @@ function checkWebsite(tab){
             console.log("Finished socket.io script execution!\n");
             chrome.tabs.executeScript(tab.id, {file: "/cryptico-master/cryptico.min.js"}, function(){
                 console.log("Finished cryptico.min.js script execution!\n");
+                chrome.tabs.executeScript(tab.id, {file: "/public/javascripts/jsonZipper.js"}, function() {
+                    console.log("Finished jsonZipper.js script execution!\n");
                     chrome.tabs.executeScript(tab.id, {file: "/public/javascripts/twitter.js"}, function () {
                         console.log("Finished twitter script execution!\n");
                     });
+                });
             });
         });
 
