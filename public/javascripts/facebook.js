@@ -31,7 +31,55 @@ socket.on('hello', function(){
                 socket.emit('id', {'name': cookieUser});
                 socket.on('name', function (data) {
                     var myid = data.id[0].id;
-                    var postField = document.getElementsByClassName('uiTextareaAutogrow input autofocus _34z- mentionsTextarea textInput');
+
+                    var postField = null;
+                    if(document.getElementsByClassName('uiTextareaAutogrow input autofocus _34z- mentionsTextarea textInput').length !== 0) {
+                        var postField = document.getElementsByClassName('uiTextareaAutogrow input autofocus _34z- mentionsTextarea textInput');
+                        var postButton = document.getElementsByClassName('_42ft _4jy0 _11b _4jy3 _4jy1 selected _51sy');
+                        postButton[0].addEventListener("mouseenter", function (event) {
+                            //postField[0].value = "Hello World";
+                            //console.log(postField[0].value);
+                            var postFieldText = postField[0];
+                            var postFieldTextInnerText = postFieldText.value;
+                            var header = postFieldTextInnerText.substring(0,3);
+                            if(header !== 'SNP') {
+                                var EncryptedMessage = cryptico.encrypt(postFieldTextInnerText, cookiePublicKey);
+                                var messageToCompress = 'SNP' + '(' + myid + ')' + EncryptedMessage.cipher;
+                                postFieldText.value = messageToCompress;
+                            }
+                            //$("#u_0_x").trigger(jQuery.Event('keypress'));
+                        });
+                        postButton[0].addEventListener("click", function(event){
+                            if(!mouseClickUpdate) {
+                                mouseClickUpdate = true;
+                                chrome.runtime.sendMessage({type: "updatef"});
+                            }
+                        });
+                    }else{
+                        var postField = document.getElementsByClassName('_4h98');
+                        postField[0].addEventListener("click", function(event) {
+                            var otherPostButton = document.getElementsByClassName('_1mf7 _4jy0 _4jy3 _4jy1 _51sy selected _42ft');
+                            otherPostButton[0].addEventListener("mouseenter", function (event) {
+                                //postField[0].value = "Hello World";
+                                //console.log(postField[0].value);
+                                var postFieldText = postField[0];
+                                var postFieldTextInnerText = postFieldText.value;
+                                var header = postFieldTextInnerText.substring(0,3);
+                                if(header !== 'SNP') {
+                                    var EncryptedMessage = cryptico.encrypt(postFieldTextInnerText, cookiePublicKey);
+                                    var messageToCompress = 'SNP' + '(' + myid + ')' + EncryptedMessage.cipher;
+                                    postFieldText.value = messageToCompress;
+                                }
+                                //$("#u_0_x").trigger(jQuery.Event('keypress'));
+                            });
+                            otherPostButton[0].addEventListener("click", function(event){
+                                if(!mouseClickUpdate) {
+                                    mouseClickUpdate = true;
+                                    chrome.runtime.sendMessage({type: "updatef"});
+                                }
+                            });
+                        });
+                    }
 
                     //var charsTyped = [];
                     //
@@ -47,27 +95,6 @@ socket.on('hello', function(){
                     //    }
                     //};
 
-                    var postButton = document.getElementsByClassName('_42ft _4jy0 _11b _4jy3 _4jy1 selected _51sy');
-                    postButton[0].addEventListener("mouseenter", function (event) {
-                        //postField[0].value = "Hello World";
-                        //console.log(postField[0].value);
-                        var postFieldText = postField[0];
-                        var postFieldTextInnerText = postFieldText.value;
-                        var header = postFieldTextInnerText.substring(0,3);
-                        if(header !== 'SNP') {
-                            var EncryptedMessage = cryptico.encrypt(postFieldTextInnerText, cookiePublicKey);
-                            var messageToCompress = 'SNP' + '(' + myid + ')' + EncryptedMessage.cipher;
-                            postFieldText.value = messageToCompress;
-                        }
-                        //$("#u_0_x").trigger(jQuery.Event('keypress'));
-                    });
-
-                    postButton[0].addEventListener("click", function(event){
-                        if(!mouseClickUpdate) {
-                            mouseClickUpdate = true;
-                            chrome.runtime.sendMessage({type: "updatef"});
-                        }
-                    });
 
                     var stream = document.getElementsByClassName('_5pbx userContent');
                     for(var msg = 0; msg<stream.length;msg++){
