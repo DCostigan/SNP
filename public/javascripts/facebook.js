@@ -55,46 +55,93 @@ socket.on('hello', function(){
                                 chrome.runtime.sendMessage({type: "updatef"});
                             }
                         });
-                    }else{
-                        var postField = document.getElementsByClassName('_4h98');
-                        postField[0].addEventListener("click", function(event) {
-                            var otherPostButton = document.getElementsByClassName('_1mf7 _4jy0 _4jy3 _4jy1 _51sy selected _42ft');
-                            otherPostButton[0].addEventListener("mouseenter", function (event) {
-                                //postField[0].value = "Hello World";
-                                //console.log(postField[0].value);
-                                var postFieldText = postField[0];
-                                var postFieldTextInnerText = postFieldText.value;
-                                var header = postFieldTextInnerText.substring(0,3);
-                                if(header !== 'SNP') {
-                                    var EncryptedMessage = cryptico.encrypt(postFieldTextInnerText, cookiePublicKey);
-                                    var messageToCompress = 'SNP' + '(' + myid + ')' + EncryptedMessage.cipher;
-                                    postFieldText.value = messageToCompress;
-                                }
-                                //$("#u_0_x").trigger(jQuery.Event('keypress'));
-                            });
-                            otherPostButton[0].addEventListener("click", function(event){
-                                if(!mouseClickUpdate) {
-                                    mouseClickUpdate = true;
-                                    chrome.runtime.sendMessage({type: "updatef"});
-                                }
-                            });
-                        });
                     }
+                    else {
 
-                    //var charsTyped = [];
-                    //
-                    //postField[0].onkeypress = function(evt) {
-                    //    evt = evt || window.event;
-                    //
-                    //    // Ensure we only handle printable keys
-                    //    var charCode = typeof evt.which == "number" ? evt.which : evt.keyCode;
-                    //
-                    //    if (charCode) {
-                    //        //Replace charCode with String.fromCharCode(charCode) to get actual character
-                    //        charsTyped.push(String.fromCharCode(charCode));
-                    //    }
-                    //};
+                        //$('#js_k').on('click', function(){
+                        //   console.log("HIT TEXTBOX!\n");
+                        //});
+                        if($("._4h96").length !== 0){
+                            $("._4h96").on('click', function(){
+                                console.log("CLICKED ONE\n");
+                            });
+                            $("._4h96").on('mouseenter', function(){
+                                console.log("MOUSEENTER ONE\n");
+                                setTimeout(function(){
+                                    var insideTextField = document.getElementsByClassName("_1mwp  " + "_5yk1");
+                                    insideTextField[0].addEventListener('click', function(){
+                                        console.log("EUREKA");
+                                        var postButton = document.getElementsByClassName('_1mf7 _4jy0 _4jy3 _4jy1 _51sy selected _42ft');
+                                        postButton[0].addEventListener('mouseenter', function (event) {
+                                            var postFieldText = insideTextField[0];
+                                            console.log(postFieldText.innerText);
+                                            var postFieldTextInnerText = postFieldText.innerText;
+                                            var header = postFieldTextInnerText.substring(0, 3);
+                                            if (header !== 'SNP') {
+                                                var EncryptedMessage = cryptico.encrypt(postFieldTextInnerText, cookiePublicKey);
+                                                var messageToCompress = 'SNP' + '(' + myid + ')' + EncryptedMessage.cipher;
+                                                postFieldText.innerText = messageToCompress;
+                                            }
+                                            //$("#u_0_x").trigger(jQuery.Event('keypress'));
+                                        });
+                                        postButton[0].addEventListener("click", function (event) {
+                                            if (!mouseClickUpdate) {
+                                                mouseClickUpdate = true;
+                                                chrome.runtime.sendMessage({type: "updatef"});
+                                            }
+                                        });
+                                    });
+                                }, 1000);
+                            });
 
+                        }
+                        else{
+                            var insideTextField = document.getElementsByClassName("_1mwp  "+"_5yk1");
+                            insideTextField[0].addEventListener('click', function(){
+                                console.log("EUREKA");
+                                var postButton = document.getElementsByClassName('_1mf7 _4jy0 _4jy3 _4jy1 _51sy selected _42ft');
+                                postButton[0].addEventListener('mouseenter', function (event) {
+                                    var postFieldText = insideTextField[0];
+                                    console.log(postFieldText.innerText);
+                                    var postFieldTextInnerText = postFieldText.innerText;
+                                    var header = postFieldTextInnerText.substring(0, 3);
+                                    if (header !== 'SNP') {
+                                        var EncryptedMessage = cryptico.encrypt(postFieldTextInnerText, cookiePublicKey);
+                                        var messageToCompress = 'SNP' + '(' + myid + ')' + EncryptedMessage.cipher;
+                                        postFieldText.innerText = messageToCompress;
+                                    }
+                                    //$("#u_0_x").trigger(jQuery.Event('keypress'));
+                                });
+                                postButton[0].addEventListener("click", function (event) {
+                                    if (!mouseClickUpdate) {
+                                        mouseClickUpdate = true;
+                                        chrome.runtime.sendMessage({type: "updatef"});
+                                    }
+                                });
+                            });
+                        }
+
+                        //var postButton = document.getElementsByClassName('_1mf7 _4jy0 _4jy3 _4jy1 _51sy selected _42ft');
+                        //var postField = document.getElementsByClassName('_209g _2vxa');
+                        //postButton[0].addEventListener('mouseenter', function (event) {
+                        //    var postFieldText = postField[0];
+                        //    console.log(postFieldText.innerText);
+                        //    var postFieldTextInnerText = postFieldText.innerText;
+                        //    var header = postFieldTextInnerText.substring(0, 3);
+                        //    if (header !== 'SNP') {
+                        //        var EncryptedMessage = cryptico.encrypt(postFieldTextInnerText, cookiePublicKey);
+                        //        var messageToCompress = 'SNP' + '(' + myid + ')' + EncryptedMessage.cipher;
+                        //        postFieldText.innerText = messageToCompress;
+                        //    }
+                        //    //$("#u_0_x").trigger(jQuery.Event('keypress'));
+                        //});
+                        //postButton[0].addEventListener("click", function (event) {
+                        //    if (!mouseClickUpdate) {
+                        //        mouseClickUpdate = true;
+                        //        chrome.runtime.sendMessage({type: "updatef"});
+                        //    }
+                        //});
+                    }
 
                     var stream = document.getElementsByClassName('_5pbx userContent');
                     for(var msg = 0; msg<stream.length;msg++){
