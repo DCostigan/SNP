@@ -281,12 +281,22 @@ document.addEventListener('DOMContentLoaded', function () {
 
     $("ul").on("click", "a.logout", function(e){
         var url = 'http://localhost:3000';
+        var cookie = readCookie(url);
+        if(cookie === null){
+            openIndex();
+            return;
+        }
         //needs to delete session from db
         eraseCookie(url);
     });
 
     $("ul").on("click", "input.trash-button", function(e){
         e.preventDefault();
+        var cookie = readCookie(url);
+        if(cookie === null){
+            openIndex();
+            return;
+        }
         var that = $(this).parent().find('label').find('input').val();
         homec.remove(cookieUser, that);
         $(this).parent().remove();
@@ -294,6 +304,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     $("ul").on("click", "input.accept-button", function(e){
         e.preventDefault();
+        var cookie = readCookie(url);
+        if(cookie === null){
+            openIndex();
+            return;
+        }
         var that = $(this).parent().find('label').find('input').val();
         homec.accept(cookieUser, that);
         var friendsList = document.getElementById('friends-list');
@@ -318,6 +333,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     $("ul").on("click", "input.delete-button", function(e){
         e.preventDefault();
+        var cookie = readCookie(url);
+        if(cookie === null){
+            openIndex();
+            return;
+        }
         var that = $(this).parent().find('label').find('input').val();
         homec.reject(cookieUser, that);
         $(this).parent().remove();
