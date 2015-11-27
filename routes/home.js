@@ -197,6 +197,19 @@ function removeInvite(name, iname, cb){
     });
 }
 
+function clearSession(name, cb){
+    var client = new pg.Client(conString);
+    client.connect();
+    var query = client.query("UPDATE SESSIONS SET session = '0' WHERE sessions.id = (SELECT id FROM USERINFO WHERE USERINFO.uname = $1)", [name]);
+    query.on('error', function(error){
+        console.log("GOT A QUERY ERROR on clearSession\n " + error);
+    });
+    query.on("end", function(){
+        client.end();
+        cb();
+    });
+}
+
 /* GET home page. */
 router.get('/', function(req, res, next) {
     var that = '/';
@@ -351,6 +364,22 @@ router.post('/deleteinvite', function(req, res, next) {
         console.log(name + " " + iname + "\n");
 
         removeInvite(name, iname, function(){
+            res.json({status: 'OK'});
+        });
+    }
+    else
+        res.redirect('https://'+req.hostname+":3030"+home+that);
+});
+
+router.post('/clear', function(req, res, next){
+    var that = '/clear';
+    var home = '/home';
+    if(req.secure){
+        console.log('Clearing Session for user!\n');
+        var name = req.body.uname;
+        console.log(name + "\n");
+
+        clearSession(name, function(){
             res.json({status: 'OK'});
         });
     }

@@ -246,6 +246,23 @@ HomeClient.prototype = {
                 alert("Could not Reject Invite!\n");
             }
         });
+    },
+
+    clear : function (uname) {
+        var that = this;
+        $.ajax({
+            type        : 'POST',
+            url         : '/home/clear',
+            data        : {'uname' : uname},
+            dataType    : 'json'
+        }).done(function (data) {
+            if(data.status === 'OK') {
+                console.log('Cleared User Session for ' + uname);
+            }
+            else{
+                alert("Could not Clear Session!\n");
+            }
+        });
     }
 };
 
@@ -287,6 +304,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
         //needs to delete session from db
+        homec.clear(cookieUser);
         eraseCookie(url);
     });
 
