@@ -376,8 +376,14 @@ document.addEventListener('DOMContentLoaded', function () {
             openIndex();
             return;
         }
-        console.log("Hit addButton!\n");
         var text = this.input.val();
+        for(var i = 0; i< invitationList[0].childElementCount;i++){
+            if(invitationList[0].childNodes[i].innerHTML.indexOf(text) != -1){
+                console.log("Already have a pending invitation for that user!\n");
+                document.getElementById("user-name").value = '';
+                return false;
+            }
+        }
         console.log("AddButton Text: " + text + "\n");
         document.getElementById("user-name").value = '';
         var injectionProofUsername = text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
