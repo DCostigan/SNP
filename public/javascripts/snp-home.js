@@ -192,7 +192,7 @@ HomeClient.prototype = {
                 that.view3.append(li);
             }
             else {
-                alert("Invalid Username and/or Password");
+                alert("Invalid Username");
             }
         });
     },
@@ -266,6 +266,8 @@ HomeClient.prototype = {
     }
 };
 
+var previousUser = '';
+
 document.addEventListener('DOMContentLoaded', function () {
     console.log("Entered DOMContentLoaded\n");
     var url = "http://localhost:3000";
@@ -276,6 +278,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     var cookieUser = cookie.substring(0, cookie.indexOf(','));
     var cookieSession = cookie.substring(cookie.indexOf(',')+1, cookie.length);
+    previousUser = cookieUser;
 
     var username = $('#user-name');
     var addUser = $('#add-user');
@@ -299,7 +302,8 @@ document.addEventListener('DOMContentLoaded', function () {
     $("ul").on("click", "a.logout", function(e){
         var url = 'http://localhost:3000';
         var cookie = readCookie(url);
-        if(cookie === null){
+        var cookieUser = cookie.substring(0, cookie.indexOf(','));
+        if(cookie === null || cookieUser !== previousUser){
             openIndex();
             return;
         }
@@ -311,7 +315,8 @@ document.addEventListener('DOMContentLoaded', function () {
     $("ul").on("click", "input.trash-button", function(e){
         e.preventDefault();
         var cookie = readCookie(url);
-        if(cookie === null){
+        var cookieUser = cookie.substring(0, cookie.indexOf(','));
+        if(cookie === null || cookieUser !== previousUser){
             openIndex();
             return;
         }
@@ -323,7 +328,8 @@ document.addEventListener('DOMContentLoaded', function () {
     $("ul").on("click", "input.accept-button", function(e){
         e.preventDefault();
         var cookie = readCookie(url);
-        if(cookie === null){
+        var cookieUser = cookie.substring(0, cookie.indexOf(','));
+        if(cookie === null || cookieUser !== previousUser){
             openIndex();
             return;
         }
@@ -352,7 +358,8 @@ document.addEventListener('DOMContentLoaded', function () {
     $("ul").on("click", "input.delete-button", function(e){
         e.preventDefault();
         var cookie = readCookie(url);
-        if(cookie === null){
+        var cookieUser = cookie.substring(0, cookie.indexOf(','));
+        if(cookie === null || cookieUser !== previousUser){
             openIndex();
             return;
         }
@@ -364,7 +371,8 @@ document.addEventListener('DOMContentLoaded', function () {
     addButton.createListener('click', function(event){
         event.preventDefault();
         var cookie = readCookie(url);
-        if(cookie === null){
+        var cookieUser = cookie.substring(0, cookie.indexOf(','));
+        if(cookie === null || cookieUser !== previousUser){
             openIndex();
             return;
         }
