@@ -10,10 +10,15 @@ function openSettings (){
 function setPause (state){
     var pauseFlag = state;
     var input = document.getElementById('pause');
-    if(pauseFlag)
+    var pause = chrome.runtime.connect({name: "pause"});
+    if(pauseFlag) {
+        pause.postMessage({'pause': 'true'});
         input.setAttribute('value', 'Unpause');
-    else
+    }
+    else {
+        pause.postMessage({'pause': 'false'});
         input.setAttribute('value', 'Pause');
+    }
 }
 
 function renderHeader(){

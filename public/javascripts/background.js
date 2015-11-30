@@ -47,9 +47,25 @@ chrome.runtime.onConnect.addListener(function(port){
     });
 });
 
+chrome.runtime.onConnect.addListener(function(port){
+    console.assert(port.name == 'pause');
+    port.onMessage.addListener(function(msg){
+        if(msg.pause === 'true') {
+            pausedState = true;
+        }
+        else if(msg.pause === 'false'){
+            pausedState = false;
+        }
+        else{
+            console.log("SOMETHING WENT WRONG WITH PAUSE ONCONNECT!\n");
+        }
+    });
+});
+
 
 var tabIDFacebook = [];
 var tabIDTwitter = [];
+var pausedState = false;
 
 chrome.runtime.onMessage.addListener(function(message){
     console.log(message.type);
@@ -160,7 +176,9 @@ function checkWebsite(tab){
 chrome.tabs.onActivated.addListener(function(activeInfo){
     console.log("Entering onActivated Listener\n");
     chrome.tabs.get(activeInfo.tabId, function(tab){
-        checkWebsite(tab);
+        if(pausedState === false){
+            checkWebsite(tab);
+        }
     });
 });
 
@@ -169,7 +187,9 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
     chrome.tabs.query({'active': true}, function (activeTabs){
         var activeTab = activeTabs[0];
         if(activeTab.id === tab.id){
-            checkWebsite(activeTab);
+            if(pausedState === false){
+                checkWebsite(activeTab);
+            }
         }
     });
     var newTab = 1;
